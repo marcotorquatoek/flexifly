@@ -7,7 +7,18 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,700;12..96,800&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
 <style>
-/* FlexiFly v3.2 — Groq AI integration */
+/* FlexiFly v3.3 — area filter chips */
+
+/* Area chips */
+.area-chips { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:16px; }
+.area-chip {
+  padding:6px 14px; border-radius:20px; border:1px solid var(--border2);
+  background:var(--s2); color:var(--text2); font-size:.8rem; font-weight:500;
+  cursor:pointer; font-family:'Instrument Sans',sans-serif; transition:all .18s;
+  user-select:none;
+}
+.area-chip:hover { border-color:var(--accent2); color:var(--accent2); }
+.area-chip.active { background:var(--accent2-dim); border-color:var(--accent2); color:var(--accent2); font-weight:600; }
 :root {
   --bg: #05080b;
   --s1: #0b1017;
@@ -265,6 +276,21 @@ a.hack-link:hover{background:var(--s3);color:var(--text)}
       </div>
     </div>
 
+    <div style="margin-bottom:4px">
+      <div style="font-size:.68rem;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--text3);margin-bottom:8px">Zona del mondo</div>
+      <div class="area-chips" id="areaChips">
+        <div class="area-chip active" data-area="esotiche" onclick="selectArea(this)">🌴 Esotiche</div>
+        <div class="area-chip" data-area="asia" onclick="selectArea(this)">🏯 Asia</div>
+        <div class="area-chip" data-area="africa" onclick="selectArea(this)">🦁 Africa</div>
+        <div class="area-chip" data-area="caraibi" onclick="selectArea(this)">🏝 Caraibi</div>
+        <div class="area-chip" data-area="sudamerica" onclick="selectArea(this)">🌎 Sudamerica</div>
+        <div class="area-chip" data-area="oceania" onclick="selectArea(this)">🦘 Oceania</div>
+        <div class="area-chip" data-area="medioriente" onclick="selectArea(this)">🕌 Medio Oriente</div>
+        <div class="area-chip" data-area="europa" onclick="selectArea(this)">🏰 Europa</div>
+        <div class="area-chip" data-area="ovunque" onclick="selectArea(this)">🌍 Ovunque</div>
+      </div>
+    </div>
+
     <div class="sp-toggles">
       <label class="tog">
         <input type="checkbox" id="avoidVisa" checked>
@@ -419,46 +445,42 @@ function bestFlexOffset(baseDep, baseRet, flexDays) {
   return best||{dD:0,dR:0,nd:baseDep,nr:baseRet,dur:base,score:0};
 }
 
+// ── AREA SELECTOR ──
+let selectedArea = 'esotiche';
+function selectArea(el) {
+  document.querySelectorAll('.area-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  selectedArea = el.dataset.area;
+}
+
 // ── AI CALL (Groq) ──
 async function fetchDestinationsFromAI(depDate, retDate, avoidVisa, airportCode) {
   const depMonth = new Date(depDate+'T00:00:00').toLocaleString('it-IT',{month:'long'});
   const dur = diffDays(depDate, retDate);
   const visaNote = avoidVisa ? 'Evitare destinazioni che richiedono scalo obbligatorio negli USA o ESTA in transito.' : '';
 
-  const prompt = `Sei un esperto di viaggi e voli internazionali. L'utente parte dall'aeroporto ${airportCode} (Italia) il ${fmtIta(depDate)} e torna il ${fmtIta(retDate)} (${dur} notti).
-${visaNote}
+  const areaInstructions = {
+    esotiche: 'Suggerisci SOLO mete esotiche fuori dall\'Europa (Oceano Indiano, Asia tropicale, Caraibi, Africa, Oceania, Sudamerica). Nessuna meta europea.',
+    asia: 'Suggerisci SOLO destinazioni in Asia (Giappone, Thailandia, Indonesia, Vietnam, Filippine, India, Cambogia, Maldive, Sri Lanka, ecc.).',
+    africa: 'Suggerisci SOLO destinazioni in Africa (Marocco, Kenya, Tanzania, Zanzibar, Sudafrica, Madagascar, Egitto, Etiopia, Capo Verde, ecc.).',
+    caraibi: 'Suggerisci SOLO destinazioni nei Caraibi e nell\'America Centrale/isole atlantiche (Cuba, Rep. Dominicana, Giamaica, Aruba, Curaçao, Porto Rico, Bahamas, Barbados, Trinidad, ecc.).',
+    sudamerica: 'Suggerisci SOLO destinazioni in Sudamerica (Colombia, Brasile, Argentina, Perù, Cile, Ecuador, Bolivia, Uruguay, ecc.).',
+    oceania: 'Suggerisci SOLO destinazioni in Oceania e Pacifico (Australia, Nuova Zelanda, Fiji, Bali, Papua Nuova Guinea, Polinesia Francese, ecc.).',
+    medioriente: 'Suggerisci SOLO destinazioni in Medio Oriente e dintorni (Giordania, Oman, Emirati, Qatar, Turchia, Israele, Marocco, Georgia, Armenia, ecc.).',
+    europa: 'Suggerisci SOLO destinazioni in Europa (inclusi Balcani, Islanda, Canarie, Azzorre, Malta, Cipro, ecc.) adatte al periodo.',
+    ovunque: 'Suggerisci le 10 migliori destinazioni al mondo per questo periodo, senza limitazioni geografiche.',
+  };
 
-In base al periodo (${depMonth}), suggerisci esattamente 10 destinazioni di viaggio OTTIMALI per questo periodo. Non limitarti solo alle mete di mare — scegli le destinazioni più adatte al periodo: se è inverno suggerisci città con mercatini di Natale, tour culturali, sci esotico, ecc. Se è primavera/autunno suggerisci mete che in quel periodo sono al meglio. Se è estate suggerisci mare esotico, natura, avventura.
+  const areaText = areaInstructions[selectedArea] || areaInstructions.ovunque;
 
-Per ogni destinazione fornisci un JSON con ESATTAMENTE questa struttura (array di 10 oggetti):
-[
-  {
-    "id": "slug-unico",
-    "name": "Nome Destinazione",
-    "country": "Paese",
-    "flag": "🏳️",
-    "region": "Regione geografica",
-    "iata": "CODICE_IATA",
-    "category": "mare|città|natura|avventura|cultura|sci",
-    "weather": "green|yellow|red",
-    "wxText": "Condizioni meteo specifiche per ${depMonth}",
-    "whyNow": "Perché questa destinazione è perfetta PROPRIO in ${depMonth}",
-    "hub": "IATA_HUB_EUROPEO",
-    "hubName": "Nome hub europeo",
-    "hubReason": "Perché questo hub è ottimale (senza ESTA, compagnia diretta, ecc.)",
-    "airlines": "Compagnia1 / Compagnia2",
-    "living": { "budget": 30, "medium": 70, "luxury": 200 },
-    "accom": { "hostel": 15, "budget": 45, "medium": 100, "resort": 280 },
-    "accomNote": "Nota pratica sugli alloggi",
-    "priceRange": { "low": 450, "high": 750 },
-    "hackSaving": { "low": 80, "high": 200 },
-    "airports": [
-      { "iata": "IATA", "name": "Nome aeroporto", "best": true, "desc": "Descrizione pratica", "note": "Nota opzionale" }
-    ]
-  }
-]
+  const jsonExample = '[{"id":"slug","name":"Nome","country":"Paese","flag":"🏳️","region":"Regione","iata":"IATA","category":"mare|città|natura","weather":"green|yellow|red","wxText":"Meteo per il mese","whyNow":"Perché ora","hub":"HUB","hubName":"Nome hub","hubReason":"Motivo hub","airlines":"Compagnia1 / Compagnia2","living":{"budget":30,"medium":70,"luxury":200},"accom":{"hostel":15,"budget":45,"medium":100,"resort":280},"accomNote":"Note alloggi","priceRange":{"low":450,"high":750},"hackSaving":{"low":80,"high":200},"airports":[{"iata":"AAA","name":"Nome aeroporto","best":true,"desc":"Descrizione","note":"Nota"}]}]';
 
-Rispondi SOLO con il JSON puro, senza testo aggiuntivo, senza markdown, senza backtick.`;
+  const prompt = 'Sei un esperto di viaggi e voli internazionali. L\'utente parte dall\'aeroporto ' + airportCode + ' (Italia) il ' + fmtIta(depDate) + ' e torna il ' + fmtIta(retDate) + ' (' + dur + ' notti).\n' +
+    (visaNote ? visaNote + '\n' : '') +
+    '\nZONA RICHIESTA: ' + areaText +
+    '\n\nIn base al periodo (' + depMonth + ') e alla zona richiesta, suggerisci esattamente 10 destinazioni OTTIMALI. Scegli le destinazioni più adatte: considera meteo, eventi locali, stagionalità, convenienza voli dall\'Italia.' +
+    '\n\nPer ogni destinazione fornisci un JSON con ESATTAMENTE questa struttura (array di 10 oggetti):\n' + jsonExample +
+    '\n\nRispondi SOLO con il JSON puro, senza testo aggiuntivo, senza markdown, senza backtick.';
 
   const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
     method: 'POST',
@@ -476,12 +498,12 @@ Rispondi SOLO con il JSON puro, senza testo aggiuntivo, senza markdown, senza ba
 
   if (!response.ok) {
     const err = await response.json();
-    throw new Error(err.error?.message || `HTTP ${response.status}`);
+    throw new Error(err.error?.message || 'HTTP ' + response.status);
   }
 
   const data = await response.json();
   const text = data.choices[0].message.content;
-  const clean = text.replace(/```json|```/g,'').trim();
+  const clean = text.indexOf('[') !== -1 ? text.slice(text.indexOf('['), text.lastIndexOf(']')+1).trim() : text.trim();
   return JSON.parse(clean);
 }
 
@@ -722,10 +744,12 @@ function renderAll(results, hideRed) {
   document.getElementById('empty').classList.remove('on');
 
   // AI context banner
+  const areaLabels = {esotiche:'mete esotiche',asia:'Asia',africa:'Africa',caraibi:'Caraibi',sudamerica:'Sudamerica',oceania:'Oceania',medioriente:'Medio Oriente',europa:'Europa',ovunque:'tutto il mondo'};
+  const areaLabel = areaLabels[selectedArea] || selectedArea;
   const depMonth = new Date(visible[0].depDate+'T00:00:00').toLocaleString('it-IT',{month:'long',year:'numeric'});
   const banner = document.createElement('div');
   banner.className = 'ai-banner';
-  banner.innerHTML = `✨ <strong>L'AI ha selezionato queste destinazioni</strong> come le migliori per <strong>${depMonth}</strong> — in base a meteo, eventi, stagionalità e convenienza dei voli dall'Italia. I badge 🟢🟡🔴 riflettono le condizioni reali di quel mese.`;
+  banner.innerHTML = `✨ <strong>L'AI ha selezionato queste destinazioni</strong> per <strong>${areaLabel}</strong> in <strong>${depMonth}</strong> — scelte in base a meteo, stagionalità, eventi e convenienza voli dall'Italia.`;
   container.appendChild(banner);
 
   // header
