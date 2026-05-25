@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,700;12..96,800&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
 <style>
-/* FlexiFly v3.3 — area filter chips */
+/* FlexiFly v3.4 — diretti, destinazione fissa, prezzi coerenti */
 
 /* Area chips */
 .area-chips { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:16px; }
@@ -276,6 +276,11 @@ a.hack-link:hover{background:var(--s3);color:var(--text)}
       </div>
     </div>
 
+    <div class="field" style="margin-bottom:14px">
+      <label>Voglio andare a… <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text3)">(opzionale — lascia vuoto per suggerimenti AI)</span></label>
+      <input type="text" id="fixedDest" placeholder="es. Rep. Dominicana, Bali, Giappone, Caraibi…" autocomplete="off">
+    </div>
+
     <div style="margin-bottom:4px">
       <div style="font-size:.68rem;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--text3);margin-bottom:8px">Zona del mondo</div>
       <div class="area-chips" id="areaChips">
@@ -458,29 +463,60 @@ async function fetchDestinationsFromAI(depDate, retDate, avoidVisa, airportCode)
   const depMonth = new Date(depDate+'T00:00:00').toLocaleString('it-IT',{month:'long'});
   const dur = diffDays(depDate, retDate);
   const visaNote = avoidVisa ? 'Evitare destinazioni che richiedono scalo obbligatorio negli USA o ESTA in transito.' : '';
+  const fixedDest = document.getElementById('fixedDest').value.trim();
 
   const areaInstructions = {
     esotiche: 'Suggerisci SOLO mete esotiche fuori dall\'Europa (Oceano Indiano, Asia tropicale, Caraibi, Africa, Oceania, Sudamerica). Nessuna meta europea.',
     asia: 'Suggerisci SOLO destinazioni in Asia (Giappone, Thailandia, Indonesia, Vietnam, Filippine, India, Cambogia, Maldive, Sri Lanka, ecc.).',
     africa: 'Suggerisci SOLO destinazioni in Africa (Marocco, Kenya, Tanzania, Zanzibar, Sudafrica, Madagascar, Egitto, Etiopia, Capo Verde, ecc.).',
-    caraibi: 'Suggerisci SOLO destinazioni nei Caraibi e nell\'America Centrale/isole atlantiche (Cuba, Rep. Dominicana, Giamaica, Aruba, Curaçao, Porto Rico, Bahamas, Barbados, Trinidad, ecc.).',
-    sudamerica: 'Suggerisci SOLO destinazioni in Sudamerica (Colombia, Brasile, Argentina, Perù, Cile, Ecuador, Bolivia, Uruguay, ecc.).',
-    oceania: 'Suggerisci SOLO destinazioni in Oceania e Pacifico (Australia, Nuova Zelanda, Fiji, Bali, Papua Nuova Guinea, Polinesia Francese, ecc.).',
-    medioriente: 'Suggerisci SOLO destinazioni in Medio Oriente e dintorni (Giordania, Oman, Emirati, Qatar, Turchia, Israele, Marocco, Georgia, Armenia, ecc.).',
-    europa: 'Suggerisci SOLO destinazioni in Europa (inclusi Balcani, Islanda, Canarie, Azzorre, Malta, Cipro, ecc.) adatte al periodo.',
+    caraibi: 'Suggerisci SOLO destinazioni nei Caraibi (Cuba, Rep. Dominicana, Giamaica, Aruba, Curacao, Porto Rico, Bahamas, Barbados, ecc.).',
+    sudamerica: 'Suggerisci SOLO destinazioni in Sudamerica (Colombia, Brasile, Argentina, Peru, Cile, Ecuador, Bolivia, Uruguay, ecc.).',
+    oceania: 'Suggerisci SOLO destinazioni in Oceania e Pacifico (Australia, Nuova Zelanda, Fiji, Polinesia Francese, ecc.).',
+    medioriente: 'Suggerisci SOLO destinazioni in Medio Oriente (Giordania, Oman, Emirati, Qatar, Turchia, Israele, Georgia, Armenia, ecc.).',
+    europa: 'Suggerisci SOLO destinazioni in Europa (inclusi Balcani, Islanda, Canarie, Azzorre, Malta, Cipro, ecc.).',
     ovunque: 'Suggerisci le 10 migliori destinazioni al mondo per questo periodo, senza limitazioni geografiche.',
   };
-
   const areaText = areaInstructions[selectedArea] || areaInstructions.ovunque;
 
-  const jsonExample = '[{"id":"slug","name":"Nome","country":"Paese","flag":"🏳️","region":"Regione","iata":"IATA","category":"mare|città|natura","weather":"green|yellow|red","wxText":"Meteo per il mese","whyNow":"Perché ora","hub":"HUB","hubName":"Nome hub","hubReason":"Motivo hub","airlines":"Compagnia1 / Compagnia2","living":{"budget":30,"medium":70,"luxury":200},"accom":{"hostel":15,"budget":45,"medium":100,"resort":280},"accomNote":"Note alloggi","priceRange":{"low":450,"high":750},"hackSaving":{"low":80,"high":200},"airports":[{"iata":"AAA","name":"Nome aeroporto","best":true,"desc":"Descrizione","note":"Nota"}]}]';
+  const priceContext = 'PREZZI REALISTICI da usare come riferimento (volo a/r per persona da Italia, economy, bagaglio stiva incluso, ' + depMonth + '):\n' +
+    '- Europa breve raggio (2-3h): EUR 80-200\n' +
+    '- Canarie/Marocco/Turchia: EUR 150-350\n' +
+    '- Egitto/Giordania/Emirati: EUR 250-500\n' +
+    '- Africa sub-sahariana (Kenya, Tanzania, Sudafrica): EUR 500-900\n' +
+    '- Caraibi via Madrid/Lisbona: EUR 550-900\n' +
+    '- Sudamerica (Colombia, Brasile): EUR 600-1000\n' +
+    '- India/Sri Lanka/Maldive: EUR 500-1000\n' +
+    '- Thailandia/Vietnam/Indonesia: EUR 550-950\n' +
+    '- Giappone/Filippine/Australia: EUR 700-1300\n' +
+    '- Oceania lontana (NZ, Fiji): EUR 1000-1800\n' +
+    'Adatta i prezzi alla stagionalita: agosto/dicembre/Pasqua = +20-30%. Considera che i voli low-cost verso hub europei (Madrid, Lisbona, Amsterdam) costano 60-120 EUR a/r aggiuntivi.';
 
-  const prompt = 'Sei un esperto di viaggi e voli internazionali. L\'utente parte dall\'aeroporto ' + airportCode + ' (Italia) il ' + fmtIta(depDate) + ' e torna il ' + fmtIta(retDate) + ' (' + dur + ' notti).\n' +
-    (visaNote ? visaNote + '\n' : '') +
-    '\nZONA RICHIESTA: ' + areaText +
-    '\n\nIn base al periodo (' + depMonth + ') e alla zona richiesta, suggerisci esattamente 10 destinazioni OTTIMALI. Scegli le destinazioni più adatte: considera meteo, eventi locali, stagionalità, convenienza voli dall\'Italia.' +
-    '\n\nPer ogni destinazione fornisci un JSON con ESATTAMENTE questa struttura (array di 10 oggetti):\n' + jsonExample +
-    '\n\nRispondi SOLO con il JSON puro, senza testo aggiuntivo, senza markdown, senza backtick.';
+  const directFlightContext = 'Per ogni destinazione, analizza attentamente:\n' +
+    '1. VOLO DIRETTO: Esiste un volo diretto da ' + airportCode + ' alla destinazione? (es. MXP ha diretti verso pochi long-haul). Se no, da quale aeroporto europeo esiste il diretto piu conveniente?\n' +
+    '2. HUB MIGLIORE: Qual e il miglior hub europeo (MAD, LIS, AMS, CDG, FRA, LHR, FCO, IST, DOH, DXB) da cui partono voli diretti o quasi-diretti per quella meta? Indica la compagnia esatta.\n' +
+    '3. CONFRONTO: E piu conveniente partire diretto da ' + airportCode + ' (se disponibile) o fare Milano->Hub->Destinazione con 2 biglietti separati?\n' +
+    'Esempi reali: Milano->Rep.Dominicana: nessun diretto da MXP, ma Iberia/Air Europa hanno diretto da MAD. Milano->Maldive: Emirates diretti da MXP via DXB. Milano->Kenya: Kenya Airways da NBO, Ethiopian da ADD.';
+
+  let destInstruction = '';
+  if (fixedDest) {
+    destInstruction = 'DESTINAZIONE FISSA RICHIESTA: "' + fixedDest + '". L\'utente vuole SPECIFICAMENTE andare qui. Analizza questa destinazione in dettaglio: trova le zone migliori, gli aeroporti, i voli disponibili, e suggerisci 3-5 varianti/opzioni per questa destinazione (es. zone diverse, aeroporti alternativi, periodi leggermente diversi). Ignora la zona selezionata e fornisci comunque 10 oggetti JSON relativi a questa meta o sue varianti.';
+  }
+
+  const jsonExample = '{"id":"slug","name":"Nome citta","country":"Paese","flag":"emoji","region":"Regione","iata":"IATA","category":"mare","weather":"green","wxText":"Meteo ' + depMonth + '","whyNow":"Perche ora","hub":"MAD","hubName":"Madrid","hubReason":"Iberia vola diretto MAD->IATA, nessun ESTA","airlines":"Iberia / Air Europa","directFromOrigin":false,"directInfo":"Nessun diretto da ' + airportCode + '. Diretto da MAD con Iberia ~5h. Opzione: ' + airportCode + '->MAD (Vueling ~80 EUR) + MAD->IATA (Iberia ~400 EUR) = totale ~480 EUR","bestDepartureAirport":"MAD","bestDepartureNote":"Conviene volare da Madrid: risparmio ~150 EUR vs connessione da ' + airportCode + '","living":{"budget":40,"medium":90,"luxury":250},"accom":{"hostel":15,"budget":50,"medium":120,"resort":350},"accomNote":"Note alloggi","priceRange":{"low":550,"high":800},"priceNote":"Stima basata su tariffe storiche ' + depMonth + ': volo ~500-700 EUR + 23kg bagaglio incluso","hackSaving":{"low":80,"high":200},"airports":[{"iata":"AAA","name":"Nome aeroporto","best":true,"desc":"Il principale","note":"20 min dal centro"}]}';
+
+  const prompt = 'Sei un esperto di viaggi con conoscenza precisa di voli, compagnie aeree e rotte internazionali.\n\n' +
+    'PARAMETRI RICERCA:\n' +
+    '- Aeroporto partenza: ' + airportCode + ' (Italia)\n' +
+    '- Date: ' + fmtIta(depDate) + ' - ' + fmtIta(retDate) + ' (' + dur + ' notti)\n' +
+    '- Mese: ' + depMonth + '\n' +
+    (visaNote ? '- Filtro visti: ' + visaNote + '\n' : '') +
+    '\n' + priceContext + '\n\n' +
+    directFlightContext + '\n\n' +
+    (destInstruction ? destInstruction + '\n\n' : 'ZONA: ' + areaText + '\n\n') +
+    'Suggerisci esattamente 10 destinazioni. Per ognuna usa ESATTAMENTE questa struttura JSON:\n' +
+    '[' + jsonExample + ']\n\n' +
+    'IMPORTANTE: I campi directFromOrigin (boolean), directInfo (stringa dettagliata con compagnia+durata+prezzo stimato), bestDepartureAirport e bestDepartureNote sono OBBLIGATORI e devono essere accurati e specifici. I prezzi in priceRange devono riflettere i prezzi realistici indicati sopra per ' + depMonth + '.\n\n' +
+    'Rispondi SOLO con JSON puro, array di 10 oggetti, senza testo aggiuntivo.';
 
   const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
     method: 'POST',
@@ -491,7 +527,7 @@ async function fetchDestinationsFromAI(depDate, retDate, avoidVisa, airportCode)
     body: JSON.stringify({
       model: 'llama-3.3-70b-versatile',
       max_tokens: 4000,
-      temperature: 0.7,
+      temperature: 0.4,
       messages: [{ role: 'user', content: prompt }]
     })
   });
@@ -549,14 +585,27 @@ function buildClaudeUrl(r, cardType, flexLabel, hackData) {
 function renderDirectCard(r) {
   const lo = r.dest.living;
   const totalMedium = r.dest.priceRange.low + lo.medium * r.baseDur;
+  const d = r.dest;
+
+  // Direct flight info box
+  const directBox = (d.directInfo) ? `
+    <div style="background:${d.directFromOrigin ? 'rgba(18,232,168,.08)' : 'rgba(59,158,255,.08)'};border:1px solid ${d.directFromOrigin ? 'rgba(18,232,168,.25)' : 'rgba(59,158,255,.25)'};border-radius:9px;padding:10px 13px;margin-bottom:14px;font-size:.78rem;line-height:1.55">
+      <div style="font-weight:700;color:${d.directFromOrigin ? 'var(--green)' : 'var(--accent2)'};margin-bottom:4px">
+        ${d.directFromOrigin ? '✈ Diretto disponibile da ' + r.airportCode : '🔀 Nessun diretto da ' + r.airportCode}
+      </div>
+      <div style="color:var(--text2)">${d.directInfo}</div>
+      ${d.bestDepartureNote ? `<div style="color:var(--text3);margin-top:4px;font-style:italic">💡 ${d.bestDepartureNote}</div>` : ''}
+    </div>` : '';
+
   return `<div class="fc">
     <div class="fc-tag tag-fixed">📅 Date fisse</div>
-    <div class="fc-subtitle">${r.airportCode} → ${r.dest.iata} · ${r.dest.airlines.split('/')[0].trim()}</div>
+    <div class="fc-subtitle">${r.airportCode} → ${d.iata} · ${d.airlines.split('/')[0].trim()}</div>
     <div class="fc-dates"><strong>${fmtIta(r.depDate)}</strong> → <strong>${fmtIta(r.retDate)}</strong> · ${r.baseDur} notti</div>
-    <div class="fc-price"><sup>€</sup>${r.dest.priceRange.low}–${r.dest.priceRange.high}</div>
-    <div class="fc-price-note">stima storica per persona, incl. bagaglio 23 kg</div>
+    ${directBox}
+    <div class="fc-price"><sup>€</sup>${d.priceRange.low}–${d.priceRange.high}</div>
+    <div class="fc-price-note">${d.priceNote || 'stima storica per persona, incl. bagaglio 23 kg'}</div>
     <div class="fc-div"></div>
-    ${renderAccom(r.dest)}
+    ${renderAccom(d)}
     <div class="budget-rows">
       <div class="budget-row"><span class="lbl">💳 Spese giornaliere (medium)</span><span class="val">€${lo.medium}/g</span></div>
       <div class="budget-row total"><span class="lbl">💰 Totale stimato (medium)</span><span class="val">€${totalMedium.toLocaleString('it-IT')}</span></div>
