@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,700;12..96,800&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
 <style>
-/* FlexiFly v3.7 — accordion destinazioni */
+/* FlexiFly v3.10 — logo sempre bianco */
 
 /* Area chips */
 .area-chips { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:16px; }
@@ -54,16 +54,19 @@
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{font-family:'Instrument Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;transition:background .3s,color .3s}
+body{font-family:'Instrument Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background .3s,color .3s}
+html{overflow-x:hidden;-webkit-overflow-scrolling:touch}
 body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:999;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");opacity:.6}
 
 /* HEADER */
-header{position:fixed;top:0;left:0;right:0;z-index:200;height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;background:rgba(240,244,248,0.95);backdrop-filter:blur(24px);border-bottom:1px solid var(--border)}
+header{position:fixed;top:0;left:0;right:0;z-index:200;height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;background:rgba(240,244,248,0.95);backdrop-filter:blur(24px);border-bottom:1px solid var(--border)}
 [data-theme=""] header, body:not([data-theme="light"]) header{background:rgba(5,8,11,0.92)}
 body{padding-top:58px}
 .logo{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:1.3rem;letter-spacing:-.03em;display:flex;align-items:center;gap:9px}
 .logo-icon{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--accent),#0fcf90);display:flex;align-items:center;justify-content:center;font-size:15px}
 .logo em{font-style:normal;color:var(--accent)}
+.logo-text-main{color:#ffffff}
+.logo-text-accent{color:#12e8a8}
 .header-right{display:flex;align-items:center;gap:12px}
 .theme-btn{display:flex;align-items:center;gap:6px;background:var(--s2);border:1px solid var(--border2);border-radius:20px;padding:5px 12px;color:var(--text2);font-size:.78rem;cursor:pointer;font-family:'Instrument Sans',sans-serif;transition:all .2s}
 .theme-btn:hover{border-color:var(--accent);color:var(--accent)}
@@ -239,7 +242,7 @@ a.hack-link:hover{background:var(--s3);color:var(--text)}
 
 <header>
   <div class="logo">
-    <svg width="36" height="36" viewBox="0 0 36 36" style="flex-shrink:0">
+    <svg width="34" height="34" viewBox="0 0 36 36" style="flex-shrink:0">
       <rect width="36" height="36" rx="10" fill="#12e8a8"/>
       <g transform="translate(5,7)">
         <path d="M3 11 Q10 7 20 11 Q10 15 3 11Z" fill="#0d1a26"/>
@@ -248,12 +251,15 @@ a.hack-link:hover{background:var(--s3);color:var(--text)}
         <path d="M3 11 L0 7 L2.5 11 L0 15Z" fill="#0d1a26"/>
       </g>
     </svg>
-    <div>
-      <div style="font-family:'Bricolage Grotesque',serif;font-weight:800;font-size:1.25rem;letter-spacing:-.03em;line-height:1">Flexi<em>Fly</em></div>
-      <div style="font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);font-weight:600;line-height:1;margin-top:2px">AI Travel Assistant</div>
+    <div style="line-height:1">
+      <div style="font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:1.2rem;letter-spacing:-.03em;line-height:1">
+        <span class="logo-text-main">Flexi</span><span class="logo-text-accent">Fly</span>
+      </div>
+      <div style="font-size:.56rem;letter-spacing:.12em;text-transform:uppercase;font-weight:600;line-height:1;margin-top:3px;color:#ffffff;opacity:.6">AI Travel Assistant</div>
     </div>
   </div>
   <div class="header-right">
+    <span style="font-size:.65rem;color:var(--text3);font-weight:600;letter-spacing:.06em" id="versionBadge">v3.10</span>
     <button class="theme-btn" id="themeBtn" onclick="toggleTheme()">🌙 Tema scuro</button>
   </div>
 </header>
