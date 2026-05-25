@@ -856,16 +856,16 @@ function renderAll(results, hideRed) {
 
   const banner = document.createElement('div');
   banner.className = 'ai-banner';
-  banner.innerHTML = '<strong>L'AI ha selezionato queste destinazioni</strong> per <strong>' + areaLabel + '</strong> in <strong>' + depMonth + '</strong> — tocca una per espandere dettagli, prezzi e link di ricerca.';
+  banner.innerHTML = '<strong>L\'AI ha selezionato queste destinazioni</strong> per <strong>' + areaLabel + '</strong> in <strong>' + depMonth + '</strong> — tocca una per espandere dettagli, prezzi e link di ricerca.';
   container.appendChild(banner);
 
   const rh = document.createElement('div');
   rh.className = 'rh';
   rh.innerHTML = '<div><div class="rh-title">' + visible.length + ' destinazioni trovate</div><div class="rh-sub">Tocca per espandere · prezzi A/R per persona</div></div>' +
     '<div class="sort-bar">' +
-    '<button class="sort-btn active" onclick="doSort('ai',this)">Ordine AI</button>' +
-    '<button class="sort-btn" onclick="doSort('saving',this)">Risparmio hack</button>' +
-    '<button class="sort-btn" onclick="doSort('living',this)">Costo vita</button>' +
+    '<button class="sort-btn active" onclick="doSort(&quot;ai&quot;,this)">Ordine AI</button>' +
+    '<button class="sort-btn" onclick="doSort(&quot;saving&quot;,this)">Risparmio hack</button>' +
+    '<button class="sort-btn" onclick="doSort(&quot;living&quot;,this)">Costo vita</button>' +
     '</div>';
   container.appendChild(rh);
 
