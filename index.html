@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,700;12..96,800&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
 <style>
-/* FlexiFly v3.5 — header fix, JSON robusto, 8k token */
+/* FlexiFly v3.7 — accordion destinazioni */
 
 /* Area chips */
 .area-chips { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:16px; }
@@ -129,20 +129,39 @@ body{padding-top:58px}
 .empty h3{font-family:'Bricolage Grotesque',sans-serif;font-size:1.1rem;color:var(--text2);margin-bottom:8px}
 .empty p{font-size:.85rem;color:var(--text3)}
 
-/* DESTINATION BLOCKS */
-.dest-block{margin-bottom:44px;opacity:0;animation:fadeUp .45s ease forwards}
-@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+/* DESTINATION BLOCKS — accordion */
+.dest-block{margin-bottom:8px;opacity:0;animation:fadeUp .35s ease forwards}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+.dest-summary{display:flex;align-items:center;gap:12px;padding:14px 18px;background:var(--s1);border:1px solid var(--border);border-radius:12px;cursor:pointer;user-select:none;transition:border-color .18s,box-shadow .18s}
+.dest-summary:hover{border-color:var(--border2);box-shadow:0 2px 12px rgba(0,0,0,.08)}
+.dest-block.open .dest-summary{border-radius:12px 12px 0 0;border-bottom-color:transparent;border-color:var(--accent);box-shadow:none}
+
+.dest-summary-flag{font-size:1.7rem;line-height:1;flex-shrink:0}
+.dest-summary-info{flex:1;min-width:0}
+.dest-summary-name{font-family:'Bricolage Grotesque',sans-serif;font-size:1rem;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dest-summary-sub{font-size:.75rem;color:var(--text3);margin-top:2px}
+.dest-summary-price{font-family:'Bricolage Grotesque',sans-serif;font-size:1rem;font-weight:800;color:var(--text);flex-shrink:0;text-align:right}
+.dest-summary-price small{display:block;font-family:'Instrument Sans',sans-serif;font-size:.62rem;font-weight:400;color:var(--text3)}
+.dest-summary-wx{flex-shrink:0}
+.dest-summary-chev{font-size:.75rem;color:var(--text3);flex-shrink:0;transition:transform .22s;margin-left:4px}
+.dest-block.open .dest-summary-chev{transform:rotate(180deg)}
+
+.dest-body{display:none;background:var(--s1);border:1px solid var(--accent);border-top:none;border-radius:0 0 12px 12px;padding:18px;animation:fadeIn .2s ease}
+.dest-block.open .dest-body{display:block}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
 .dest-hd{display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
 .dest-flag{font-size:1.9rem;line-height:1}
 .dest-name{font-family:'Bricolage Grotesque',sans-serif;font-size:1.15rem;font-weight:700;letter-spacing:-.01em;color:var(--text)}
 .dest-region{font-size:.78rem;color:var(--text3);margin-top:2px}
 .dest-maps{display:inline-flex;align-items:center;gap:5px;font-size:.72rem;color:var(--accent2);text-decoration:none;border:1px solid var(--accent2-dim);background:var(--accent2-dim);border-radius:5px;padding:2px 8px;margin-top:3px;transition:all .18s}
 .dest-maps:hover{background:var(--accent2);color:#fff}
-.wx-badge{margin-left:auto;flex-shrink:0;display:flex;align-items:center;gap:6px;padding:5px 12px;border-radius:18px;font-size:.76rem;font-weight:600;position:relative;cursor:default}
+.wx-badge{flex-shrink:0;display:flex;align-items:center;gap:6px;padding:5px 12px;border-radius:18px;font-size:.76rem;font-weight:600;position:relative;cursor:default}
 .wx-badge.green{background:rgba(18,232,168,.1);color:var(--green);border:1px solid rgba(18,232,168,.2)}
 .wx-badge.yellow{background:rgba(245,200,66,.1);color:var(--yellow);border:1px solid rgba(245,200,66,.2)}
 .wx-badge.red{background:rgba(255,77,106,.1);color:var(--red);border:1px solid rgba(255,77,106,.2)}
-.wx-badge .tip{display:none;position:absolute;bottom:calc(100% + 8px);right:0;background:var(--s3);border:1px solid var(--border2);border-radius:8px;padding:8px 12px;font-size:.76rem;color:var(--text2);white-space:nowrap;box-shadow:var(--shadow);font-weight:400;z-index:50}
+.wx-badge .tip{display:none;position:absolute;bottom:calc(100% + 8px);right:0;background:var(--s3);border:1px solid var(--border2);border-radius:8px;padding:8px 12px;font-size:.76rem;color:var(--text2);white-space:nowrap;box-shadow:var(--shadow);font-weight:400;z-index:50;max-width:260px;white-space:normal}
 .wx-badge:hover .tip{display:block}
 
 /* CARDS */
@@ -479,18 +498,18 @@ async function fetchDestinationsFromAI(depDate, retDate, avoidVisa, airportCode)
   };
   const areaText = areaInstructions[selectedArea] || areaInstructions.ovunque;
 
-  const priceContext = 'PREZZI REALISTICI da usare come riferimento (volo a/r per persona da Italia, economy, bagaglio stiva incluso, ' + depMonth + '):\n' +
-    '- Europa breve raggio (2-3h): EUR 80-200\n' +
-    '- Canarie/Marocco/Turchia: EUR 150-350\n' +
-    '- Egitto/Giordania/Emirati: EUR 250-500\n' +
-    '- Africa sub-sahariana (Kenya, Tanzania, Sudafrica): EUR 500-900\n' +
-    '- Caraibi via Madrid/Lisbona: EUR 550-900\n' +
-    '- Sudamerica (Colombia, Brasile): EUR 600-1000\n' +
-    '- India/Sri Lanka/Maldive: EUR 500-1000\n' +
-    '- Thailandia/Vietnam/Indonesia: EUR 550-950\n' +
-    '- Giappone/Filippine/Australia: EUR 700-1300\n' +
-    '- Oceania lontana (NZ, Fiji): EUR 1000-1800\n' +
-    'Adatta i prezzi alla stagionalita: agosto/dicembre/Pasqua = +20-30%. Considera che i voli low-cost verso hub europei (Madrid, Lisbona, Amsterdam) costano 60-120 EUR a/r aggiuntivi.';
+  const priceContext = 'PREZZI REALISTICI da usare come riferimento (volo ANDATA+RITORNO per persona, economy, bagaglio stiva 23kg incluso, partenza Italia, ' + depMonth + '):\n' +
+    '- Europa breve raggio (2-3h): EUR 80-200 A/R\n' +
+    '- Canarie/Marocco/Turchia: EUR 150-350 A/R\n' +
+    '- Egitto/Giordania/Emirati: EUR 250-500 A/R\n' +
+    '- Africa sub-sahariana (Kenya, Tanzania, Sudafrica): EUR 500-900 A/R\n' +
+    '- Caraibi via Madrid/Lisbona: EUR 550-900 A/R\n' +
+    '- Sudamerica (Colombia, Brasile): EUR 600-1000 A/R\n' +
+    '- India/Sri Lanka/Maldive: EUR 500-1000 A/R\n' +
+    '- Thailandia/Vietnam/Indonesia: EUR 550-950 A/R\n' +
+    '- Giappone/Filippine/Australia: EUR 700-1300 A/R\n' +
+    '- Oceania lontana (NZ, Fiji): EUR 1000-1800 A/R\n' +
+    'Adatta i prezzi alla stagionalita: agosto/dicembre/Pasqua = +20-30%. TUTTI I PREZZI SONO ANDATA+RITORNO. Il campo priceNote deve sempre contenere la dicitura "A/R per persona" e spiegare brevemente come e composto il prezzo.';
 
   const directFlightContext = 'Per ogni destinazione, analizza attentamente:\n' +
     '1. VOLO DIRETTO: Esiste un volo diretto da ' + airportCode + ' alla destinazione? (es. MXP ha diretti verso pochi long-haul). Se no, da quale aeroporto europeo esiste il diretto piu conveniente?\n' +
@@ -632,7 +651,7 @@ function renderDirectCard(r) {
     <div class="fc-dates"><strong>${fmtIta(r.depDate)}</strong> → <strong>${fmtIta(r.retDate)}</strong> · ${r.baseDur} notti</div>
     ${directBox}
     <div class="fc-price"><sup>€</sup>${d.priceRange.low}–${d.priceRange.high}</div>
-    <div class="fc-price-note">${d.priceNote || 'stima storica per persona, incl. bagaglio 23 kg'}</div>
+    <div class="fc-price-note">${d.priceNote || 'A/R per persona · bagaglio 23kg incluso · stima storica'}</div>
     <div class="fc-div"></div>
     ${renderAccom(d)}
     <div class="budget-rows">
@@ -803,8 +822,18 @@ function computeDestUrls(dest, airportCode, depDate, retDate, flexDays, showHack
     hackData };
 }
 
-// ── RENDER ALL ──
+// ── RENDER ALL — accordion ──
 let lastResults = [];
+function toggleDest(id) {
+  const block = document.getElementById(id);
+  const isOpen = block.classList.contains('open');
+  document.querySelectorAll('.dest-block.open').forEach(b => b.classList.remove('open'));
+  if (!isOpen) {
+    block.classList.add('open');
+    block.scrollIntoView({behavior:'smooth', block:'nearest'});
+  }
+}
+
 function renderAll(results, hideRed) {
   const container = document.getElementById('resultsContainer');
   const meteoNotice = document.getElementById('meteoNotice');
@@ -821,57 +850,78 @@ function renderAll(results, hideRed) {
   if(!visible.length){ document.getElementById('empty').classList.add('on'); return; }
   document.getElementById('empty').classList.remove('on');
 
-  // AI context banner
   const areaLabels = {esotiche:'mete esotiche',asia:'Asia',africa:'Africa',caraibi:'Caraibi',sudamerica:'Sudamerica',oceania:'Oceania',medioriente:'Medio Oriente',europa:'Europa',ovunque:'tutto il mondo'};
   const areaLabel = areaLabels[selectedArea] || selectedArea;
   const depMonth = new Date(visible[0].depDate+'T00:00:00').toLocaleString('it-IT',{month:'long',year:'numeric'});
+
   const banner = document.createElement('div');
   banner.className = 'ai-banner';
-  banner.innerHTML = `✨ <strong>L'AI ha selezionato queste destinazioni</strong> per <strong>${areaLabel}</strong> in <strong>${depMonth}</strong> — scelte in base a meteo, stagionalità, eventi e convenienza voli dall'Italia.`;
+  banner.innerHTML = '<strong>L'AI ha selezionato queste destinazioni</strong> per <strong>' + areaLabel + '</strong> in <strong>' + depMonth + '</strong> — tocca una per espandere dettagli, prezzi e link di ricerca.';
   container.appendChild(banner);
 
-  // header
   const rh = document.createElement('div');
   rh.className = 'rh';
-  rh.innerHTML = `<div>
-    <div class="rh-title">${visible.length} destinazioni trovate dall'AI</div>
-    <div class="rh-sub">Clicca "Cerca ora" per aprire la ricerca reale già precompilata</div>
-  </div>
-  <div class="sort-bar">
-    <button class="sort-btn active" onclick="doSort('ai',this)">Ordine AI</button>
-    <button class="sort-btn" onclick="doSort('saving',this)">Risparmio hack</button>
-    <button class="sort-btn" onclick="doSort('living',this)">Costo vita</button>
-  </div>`;
+  rh.innerHTML = '<div><div class="rh-title">' + visible.length + ' destinazioni trovate</div><div class="rh-sub">Tocca per espandere · prezzi A/R per persona</div></div>' +
+    '<div class="sort-bar">' +
+    '<button class="sort-btn active" onclick="doSort('ai',this)">Ordine AI</button>' +
+    '<button class="sort-btn" onclick="doSort('saving',this)">Risparmio hack</button>' +
+    '<button class="sort-btn" onclick="doSort('living',this)">Costo vita</button>' +
+    '</div>';
   container.appendChild(rh);
 
-  visible.forEach((r,i) => {
+  visible.forEach((r, i) => {
+    const wxIco = {green:'☀️',yellow:'⛅',red:'🌧️'}[r.dest.weather] || '❓';
+    const wxLabel = {green:'Clima ottimo',yellow:'Attenzione',red:'Sconsigliato'}[r.dest.weather] || '';
+    const mapsUrl = buildAppleMaps(r.dest.name, r.dest.country);
+    const blockId = 'dest-' + (r.dest.id || i);
+
     const block = document.createElement('div');
     block.className = 'dest-block';
-    block.style.animationDelay = `${i*.07}s`;
-    const wxIco = {green:'☀️',yellow:'⛅',red:'🌧️'}[r.dest.weather];
-    const wxLabel = {green:'Clima ottimo',yellow:'Attenzione piogge',red:'Sconsigliato'}[r.dest.weather];
-    const mapsUrl = buildAppleMaps(r.dest.name, r.dest.country);
+    block.id = blockId;
+    block.style.animationDelay = i * 0.06 + 's';
 
-    block.innerHTML = `<div class="dest-hd">
-      <div class="dest-flag">${r.dest.flag}</div>
-      <div>
-        <div class="dest-name">${r.dest.name}</div>
-        <div class="dest-region">${r.dest.region} · ${r.dest.iata}</div>
-        <a class="dest-maps" href="${mapsUrl}" target="_blank" rel="noopener">🗺 Apri in Apple Maps</a>
-      </div>
-      <div class="wx-badge ${r.dest.weather}">${wxIco} ${wxLabel}<div class="tip">${r.dest.wxText}</div></div>
-    </div>
-    ${r.dest.whyNow ? `<div style="font-size:.8rem;color:var(--accent);background:var(--accent-dim);border-radius:8px;padding:9px 12px;margin-bottom:14px;border-left:2px solid var(--accent);line-height:1.5">✦ <strong>Perché proprio ora:</strong> ${r.dest.whyNow}</div>` : ''}
-    <div class="cards-grid">
-      ${renderDirectCard(r)}
-      ${r.hasFlex ? renderFlexCard(r, r.flexLabel) : ''}
-      ${r.hackData ? renderHackCard(r) : ''}
-    </div>
-    ${renderAirportPanel(r.dest)}`;
+    // Summary row (always visible)
+    const summary = document.createElement('div');
+    summary.className = 'dest-summary';
+    summary.onclick = function(){ toggleDest(blockId); };
+    summary.innerHTML =
+      '<div class="dest-summary-flag">' + r.dest.flag + '</div>' +
+      '<div class="dest-summary-info">' +
+        '<div class="dest-summary-name">' + r.dest.name + '</div>' +
+        '<div class="dest-summary-sub">' + r.dest.region + ' · ' + r.dest.iata + ' · ' + r.baseDur + ' notti</div>' +
+      '</div>' +
+      '<span class="wx-badge ' + r.dest.weather + '" style="padding:3px 8px;font-size:.7rem;margin-left:auto">' + wxIco + ' ' + wxLabel + '</span>' +
+      '<div class="dest-summary-price">€' + r.dest.priceRange.low + '–' + r.dest.priceRange.high + '<small>A/R p.p.</small></div>' +
+      '<div class="dest-summary-chev">▼</div>';
+
+    // Body (hidden until expanded)
+    const body = document.createElement('div');
+    body.className = 'dest-body';
+    body.innerHTML =
+      '<div class="dest-hd">' +
+        '<div class="dest-flag">' + r.dest.flag + '</div>' +
+        '<div>' +
+          '<div class="dest-name">' + r.dest.name + '</div>' +
+          '<div class="dest-region">' + r.dest.region + ' · ' + r.dest.iata + '</div>' +
+          '<a class="dest-maps" href="' + mapsUrl + '" target="_blank" rel="noopener">🗺 Apri in Apple Maps</a>' +
+        '</div>' +
+        '<div class="wx-badge ' + r.dest.weather + '" style="margin-left:auto">' + wxIco + ' ' + wxLabel +
+          '<div class="tip">' + (r.dest.wxText || '') + '</div>' +
+        '</div>' +
+      '</div>' +
+      (r.dest.whyNow ? '<div style="font-size:.8rem;color:var(--accent);background:var(--accent-dim);border-radius:8px;padding:9px 12px;margin-bottom:14px;border-left:2px solid var(--accent);line-height:1.5">✦ <strong>Perché proprio ora:</strong> ' + r.dest.whyNow + '</div>' : '') +
+      '<div class="cards-grid">' +
+        renderDirectCard(r) +
+        (r.hasFlex ? renderFlexCard(r, r.flexLabel) : '') +
+        (r.hackData ? renderHackCard(r) : '') +
+      '</div>' +
+      renderAirportPanel(r.dest);
+
+    block.appendChild(summary);
+    block.appendChild(body);
     container.appendChild(block);
   });
 }
-
 // ── SORT ──
 function doSort(key, btn) {
   document.querySelectorAll('.sort-btn').forEach(b=>b.classList.remove('active'));
