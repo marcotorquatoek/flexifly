@@ -31,6 +31,29 @@
   --shadow: 0 12px 50px rgba(0,0,0,0.5);
 }
 
+[data-theme="light"] {
+  --bg: #f0f4f8;
+  --s1: #ffffff;
+  --s2: #f0f4f8;
+  --s3: #e2eaf2;
+  --s4: #d4dfe8;
+  --border: rgba(0,0,0,0.08);
+  --border2: rgba(0,0,0,0.13);
+  --accent: #0aad7e;
+  --accent-dim: rgba(10,173,126,0.1);
+  --accent2: #1a7de0;
+  --accent2-dim: rgba(26,125,224,0.1);
+  --orange: #d95f2a;
+  --orange-dim: rgba(217,95,42,0.1);
+  --text: #0d1a26;
+  --text2: #3a5068;
+  --text3: #7a94aa;
+  --green: #0aad7e;
+  --yellow: #b8860b;
+  --red: #c0253d;
+  --shadow: 0 12px 50px rgba(0,0,0,0.12);
+}
+
 *{box-sizing:border-box;margin:0;padding:0}
 
 html { scroll-behavior: smooth; }
@@ -41,6 +64,7 @@ body {
   color: var(--text);
   min-height: 100vh;
   overflow-x: hidden;
+  transition: background .3s, color .3s;
 }
 
 /* grain overlay */
@@ -86,13 +110,13 @@ header {
   text-align: center;
   position: relative;
   overflow: hidden;
-  background: #05080b;
+  background: var(--bg);
 }
 
 .results-wrap {
   max-width: 920px; margin: 56px auto 100px;
   padding: 0 32px;
-  background: #05080b;
+  background: var(--bg);
 }
 
 .hero-bg {
@@ -289,22 +313,22 @@ header {
 .rh-title {
   font-family: 'Bricolage Grotesque', sans-serif;
   font-size: 1.15rem; font-weight: 700;
-  color: #dce8f2;
+  color: var(--text);
 }
-.rh-sub { font-size: 0.78rem; color: #3d5263; margin-top: 3px; }
+.rh-sub { font-size: 0.78rem; color: var(--text3); margin-top: 3px; }
 
 .sort-bar { display: flex; gap: 8px; }
 .sort-btn {
   padding: 5px 13px; border-radius: 18px;
-  border: 1px solid #1f2d3a;
-  background: #0b1017; color: #7a94aa;
+  border: 1px solid var(--s4);
+  background: var(--s1); color: var(--text2);
   font-size: 0.78rem; cursor: pointer;
   font-family: 'Instrument Sans', sans-serif;
   transition: all .18s;
 }
 .sort-btn.active, .sort-btn:hover {
-  border-color: #12e8a8; color: #12e8a8;
-  background: rgba(18,232,168,0.08);
+  border-color: var(--accent); color: var(--accent);
+  background: var(--accent-dim);
 }
 
 /* Meteo notice */
@@ -337,9 +361,9 @@ header {
 .dest-name {
   font-family: 'Bricolage Grotesque', sans-serif;
   font-size: 1.15rem; font-weight: 700; letter-spacing: -0.01em;
-  color: #dce8f2;
+  color: var(--text);
 }
-.dest-region { font-size: 0.78rem; color: #3d5263; margin-top: 2px; }
+.dest-region { font-size: 0.78rem; color: var(--text3); margin-top: 2px; }
 
 /* Weather badge */
 .wx-badge {
@@ -656,10 +680,21 @@ header {
   font-style: italic;
 }
 
+/* Theme toggle button */
+.theme-btn {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--s2); border: 1px solid var(--border2);
+  border-radius: 20px; padding: 5px 12px;
+  color: var(--text2); font-size: 0.78rem;
+  cursor: pointer; font-family: 'Instrument Sans', sans-serif;
+  transition: all .2s;
+}
+.theme-btn:hover { border-color: var(--accent); color: var(--accent); }
+
 /* disclaimer */
 .disclaimer {
   text-align: center; padding: 32px 32px 60px;
-  background: #05080b;
+  background: var(--bg);
   font-size: 0.75rem; color: var(--text3); line-height: 1.7;
   max-width: 680px; margin: 0 auto;
 }
@@ -673,7 +708,10 @@ header {
     <div class="logo-icon">✈</div>
     Flexi<em>Fly</em>
   </div>
-  <div class="header-right">🌊 Mare Esotico · Fuori Europa · Agosto</div>
+  <div class="header-right" style="display:flex;align-items:center;gap:12px">
+    <span style="font-size:0.75rem;color:var(--text3);letter-spacing:0.07em;text-transform:uppercase">🌊 Mare Esotico · Agosto</span>
+    <button class="theme-btn" id="themeBtn" onclick="toggleTheme()">☀️ Tema chiaro</button>
+  </div>
 </header>
 
 <section class="hero">
@@ -739,7 +777,7 @@ header {
   </div>
 </section>
 
-<section class="results-wrap" style="background:#05080b">
+<section class="results-wrap" id="resultsWrap">
   <div class="loading-state" id="loading">
     <div class="spinner-ring"></div>
     <div class="loading-msg">Calcolo le combinazioni ottimali…</div>
@@ -764,6 +802,7 @@ header {
 </div>
 
 <script>
+// FlexiFly v2.0 — bug fix renderAccom + light theme
 // ═══════════════════════════════════════════════════════
 // DATABASE DESTINAZIONI
 // Tutti i dati si basano su conoscenza reale:
@@ -1620,6 +1659,7 @@ function claudeBtn(url) {
     </a>
   `;
 }
+function renderAccom(dest) {
   const a = dest.accom;
   if (!a) return '';
   const cells = [
@@ -1826,6 +1866,15 @@ function doSort(key, btn) {
 function showHiddenRed() {
   document.getElementById('hideRed').checked = false;
   renderAll(lastAll, false);
+}
+
+// ── THEME TOGGLE ──
+let isDark = true;
+function toggleTheme() {
+  isDark = !isDark;
+  document.documentElement.setAttribute('data-theme', isDark ? '' : 'light');
+  const btn = document.getElementById('themeBtn');
+  btn.textContent = isDark ? '☀️ Tema chiaro' : '🌙 Tema scuro';
 }
 
 // ── SEARCH ──
