@@ -1,12 +1,13 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="it" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>FlexiFly — Il Tuo Assistente Voli Esotici</title>
+<title>FlexiFly — Assistente Voli Intelligente</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,700;12..96,800&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
 <style>
+/* FlexiFly v3.2 — Groq AI integration */
 :root {
   --bg: #05080b;
   --s1: #0b1017;
@@ -30,715 +31,226 @@
   --r: 14px;
   --shadow: 0 12px 50px rgba(0,0,0,0.5);
 }
-
 [data-theme="light"] {
-  --bg: #f0f4f8;
-  --s1: #ffffff;
-  --s2: #f0f4f8;
-  --s3: #e2eaf2;
-  --s4: #d4dfe8;
-  --border: rgba(0,0,0,0.08);
-  --border2: rgba(0,0,0,0.13);
-  --accent: #0aad7e;
-  --accent-dim: rgba(10,173,126,0.1);
-  --accent2: #1a7de0;
-  --accent2-dim: rgba(26,125,224,0.1);
-  --orange: #d95f2a;
-  --orange-dim: rgba(217,95,42,0.1);
-  --text: #0d1a26;
-  --text2: #3a5068;
-  --text3: #7a94aa;
-  --green: #0aad7e;
-  --yellow: #b8860b;
-  --red: #c0253d;
+  --bg: #f0f4f8; --s1: #ffffff; --s2: #f0f4f8; --s3: #e2eaf2; --s4: #d4dfe8;
+  --border: rgba(0,0,0,0.08); --border2: rgba(0,0,0,0.13);
+  --accent: #0aad7e; --accent-dim: rgba(10,173,126,0.1);
+  --accent2: #1a7de0; --accent2-dim: rgba(26,125,224,0.1);
+  --orange: #d95f2a; --orange-dim: rgba(217,95,42,0.1);
+  --text: #0d1a26; --text2: #3a5068; --text3: #7a94aa;
+  --green: #0aad7e; --yellow: #b8860b; --red: #c0253d;
   --shadow: 0 12px 50px rgba(0,0,0,0.12);
 }
-
 *{box-sizing:border-box;margin:0;padding:0}
-
-html { scroll-behavior: smooth; }
-
-body {
-  font-family: 'Instrument Sans', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  overflow-x: hidden;
-  transition: background .3s, color .3s;
-}
-
-/* grain overlay */
-body::after {
-  content:'';position:fixed;inset:0;pointer-events:none;z-index:999;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
-  opacity:0.6;
-}
-
-/* ─── HEADER ─── */
-header {
-  position: sticky; top: 0; z-index: 200;
-  height: 58px;
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 0 32px;
-  background: rgba(5,8,11,0.82);
-  backdrop-filter: blur(24px);
-  border-bottom: 1px solid var(--border);
-}
-
-.logo {
-  font-family: 'Bricolage Grotesque', sans-serif;
-  font-weight: 800; font-size: 1.3rem;
-  letter-spacing: -0.03em;
-  display: flex; align-items: center; gap: 9px;
-}
-.logo-icon {
-  width: 30px; height: 30px; border-radius: 8px;
-  background: linear-gradient(135deg, var(--accent), #0fcf90);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 15px;
-}
-.logo em { font-style:normal; color: var(--accent); }
-
-.header-right {
-  font-size: 0.75rem; color: var(--text3);
-  letter-spacing: 0.07em; text-transform: uppercase;
-}
-
-/* ─── HERO ─── */
-.hero {
-  padding: 72px 32px 56px;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-  background: var(--bg);
-}
-
-.results-wrap {
-  max-width: 920px; margin: 56px auto 100px;
-  padding: 0 32px;
-  background: var(--bg);
-}
-
-.hero-bg {
-  position: absolute; inset: 0; pointer-events: none;
-  background:
-    radial-gradient(ellipse 700px 300px at 50% -60px, rgba(18,232,168,0.07) 0%, transparent 70%),
-    radial-gradient(ellipse 400px 200px at 80% 80%, rgba(59,158,255,0.05) 0%, transparent 70%);
-}
-
-.hero-eyebrow {
-  display: inline-flex; align-items: center; gap: 6px;
-  font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em;
-  text-transform: uppercase; color: var(--accent);
-  border: 1px solid rgba(18,232,168,0.2);
-  border-radius: 20px; padding: 5px 14px;
-  margin-bottom: 22px;
-  background: rgba(18,232,168,0.05);
-}
-
-.hero h1 {
-  font-family: 'Bricolage Grotesque', sans-serif;
-  font-weight: 800;
-  font-size: clamp(2.2rem, 5.5vw, 4rem);
-  letter-spacing: -0.04em; line-height: 1.08;
-  margin-bottom: 18px;
-}
-
-.hero h1 span {
-  background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.hero-sub {
-  color: var(--text2); font-size: 1rem; font-weight: 400;
-  line-height: 1.65; max-width: 560px; margin: 0 auto 48px;
-}
-
-/* ─── SEARCH PANEL ─── */
-.search-panel {
-  max-width: 920px; margin: 0 auto;
-  background: var(--s1);
-  border: 1px solid var(--border2);
-  border-radius: 20px;
-  padding: 28px 28px 24px;
-  box-shadow: var(--shadow), 0 0 0 1px rgba(18,232,168,0.03);
-  position: relative; z-index: 10;
-}
-
-.sp-grid {
-  display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 16px;
-}
-
-@media(max-width: 760px) {
-  .sp-grid { grid-template-columns: 1fr 1fr; }
-  .sp-grid .field:first-child { grid-column: span 2; }
-}
-@media(max-width: 480px) {
-  .sp-grid { grid-template-columns: 1fr; }
-  .sp-grid .field:first-child { grid-column: span 1; }
-  header { padding: 0 16px; }
-  .hero { padding: 48px 16px 40px; }
-  .search-panel { padding: 20px 16px 18px; }
-  .results-wrap { padding: 0 16px; }
-}
-
-.field label {
-  display: block;
-  font-size: 0.68rem; font-weight: 600;
-  letter-spacing: 0.09em; text-transform: uppercase;
-  color: var(--text3); margin-bottom: 7px;
-}
-
-.field select,
-.field input[type="date"],
-.field input[type="text"] {
-  width: 100%;
-  background: var(--s2);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 11px 14px;
-  color: var(--text);
-  font-family: 'Instrument Sans', sans-serif;
-  font-size: 16px; /* min 16px previene zoom iOS */
-  outline: none;
-  transition: border-color .2s, box-shadow .2s;
-  appearance: none;
-  -webkit-appearance: none;
-}
-
-.field select {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%233d5263' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-  background-repeat: no-repeat; background-position: right 12px center;
-  padding-right: 32px; cursor: pointer;
-}
-
-.field select:focus,
-.field input:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(18,232,168,0.08);
-}
-
-.field select option { background: #111820; }
-
-/* Toggles */
-.sp-toggles {
-  display: flex; flex-wrap: wrap; gap: 18px 28px;
-  align-items: center;
-  padding: 14px 0 18px;
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-  margin-bottom: 18px;
-}
-
-.tog {
-  display: flex; align-items: center; gap: 9px;
-  cursor: pointer; user-select: none;
-}
-
-.tog input { display: none; }
-
-.tog-track {
-  width: 40px; height: 22px;
-  background: var(--s3); border: 1px solid var(--border2);
-  border-radius: 11px; position: relative;
-  transition: background .2s, border-color .2s;
-  flex-shrink: 0;
-}
-
-.tog-track::after {
-  content: ''; position: absolute;
-  top: 3px; left: 3px;
-  width: 14px; height: 14px;
-  background: var(--text3); border-radius: 50%;
-  transition: transform .22s, background .22s;
-}
-
-.tog input:checked + .tog-track {
-  background: rgba(18,232,168,0.18);
-  border-color: var(--accent);
-}
-.tog input:checked + .tog-track::after {
-  transform: translateX(18px); background: var(--accent);
-}
-
-.tog-label { font-size: 0.84rem; color: var(--text2); line-height: 1.4; }
-
-/* Search button */
-.btn-search {
-  width: 100%; padding: 15px;
-  background: var(--accent);
-  color: #05080b;
-  font-family: 'Bricolage Grotesque', sans-serif;
-  font-weight: 700; font-size: 0.98rem;
-  letter-spacing: 0.01em;
-  border: none; border-radius: 11px;
-  cursor: pointer;
-  display: flex; align-items: center; justify-content: center; gap: 8px;
-  transition: opacity .18s, transform .15s;
-}
-.btn-search:hover { opacity: 0.88; transform: translateY(-1px); }
-.btn-search:active { transform: translateY(0); opacity: 1; }
-.btn-search:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-
-/* ─── RESULTS ─── */
-
-/* Loading */
-.loading-state {
-  display: none; text-align: center;
-  padding: 70px 20px;
-}
-.loading-state.on { display: block; }
-
-.spinner-ring {
-  width: 44px; height: 44px; margin: 0 auto 20px;
-  border: 2px solid var(--s3); border-top-color: var(--accent);
-  border-radius: 50%;
-  animation: spin .75s linear infinite;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-
-.loading-msg { font-size: 0.88rem; color: var(--text2); margin-bottom: 6px; }
-.loading-step { font-size: 0.78rem; color: var(--text3); font-style: italic; min-height: 18px; }
-
-/* Results header */
-.rh {
-  display: flex; align-items: flex-end; justify-content: space-between;
-  margin-bottom: 28px; flex-wrap: wrap; gap: 14px;
-}
-
-.rh-title {
-  font-family: 'Bricolage Grotesque', sans-serif;
-  font-size: 1.15rem; font-weight: 700;
-  color: var(--text);
-}
-.rh-sub { font-size: 0.78rem; color: var(--text3); margin-top: 3px; }
-
-.sort-bar { display: flex; gap: 8px; }
-.sort-btn {
-  padding: 5px 13px; border-radius: 18px;
-  border: 1px solid var(--s4);
-  background: var(--s1); color: var(--text2);
-  font-size: 0.78rem; cursor: pointer;
-  font-family: 'Instrument Sans', sans-serif;
-  transition: all .18s;
-}
-.sort-btn.active, .sort-btn:hover {
-  border-color: var(--accent); color: var(--accent);
-  background: var(--accent-dim);
-}
-
-/* Meteo notice */
-.meteo-notice {
-  display: none; align-items: center; gap: 10px;
-  background: rgba(255,77,106,0.07);
-  border: 1px solid rgba(255,77,106,0.15);
-  border-radius: 10px; padding: 11px 16px;
-  font-size: 0.82rem; color: var(--red);
-  margin-bottom: 22px;
-}
-.meteo-notice.on { display: flex; }
-.meteo-notice a { color: var(--red); text-decoration: underline; cursor: pointer; margin-left: 6px; }
-
-/* Destination block */
-.dest-block {
-  margin-bottom: 44px;
-  opacity: 0; animation: fadeUp .45s ease forwards;
-}
-@keyframes fadeUp {
-  from { opacity:0; transform:translateY(18px); }
-  to { opacity:1; transform:translateY(0); }
-}
-
-.dest-hd {
-  display: flex; align-items: center; gap: 12px;
-  margin-bottom: 14px;
-}
-.dest-flag { font-size: 1.9rem; line-height: 1; }
-.dest-name {
-  font-family: 'Bricolage Grotesque', sans-serif;
-  font-size: 1.15rem; font-weight: 700; letter-spacing: -0.01em;
-  color: var(--text);
-}
-.dest-region { font-size: 0.78rem; color: var(--text3); margin-top: 2px; }
-
-/* Weather badge */
-.wx-badge {
-  margin-left: auto; flex-shrink: 0;
-  display: flex; align-items: center; gap: 6px;
-  padding: 5px 12px; border-radius: 18px;
-  font-size: 0.76rem; font-weight: 600;
-  position: relative; cursor: default;
-}
-.wx-badge.green { background: rgba(18,232,168,0.1); color: var(--green); border: 1px solid rgba(18,232,168,0.2); }
-.wx-badge.yellow { background: rgba(245,200,66,0.1); color: var(--yellow); border: 1px solid rgba(245,200,66,0.2); }
-.wx-badge.red { background: rgba(255,77,106,0.1); color: var(--red); border: 1px solid rgba(255,77,106,0.2); }
-
-/* Tooltip */
-.wx-badge .tip {
-  display: none; position: absolute;
-  bottom: calc(100% + 8px); right: 0;
-  background: var(--s3); border: 1px solid var(--border2);
-  border-radius: 8px; padding: 8px 12px;
-  font-size: 0.76rem; color: var(--text2);
-  white-space: nowrap; box-shadow: var(--shadow);
-  font-weight: 400; z-index: 50;
-}
-.wx-badge:hover .tip { display: block; }
-
-/* Cards grid */
-.cards-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
-  gap: 14px;
-}
-
-/* Flight card */
-.fc {
-  background: var(--s1);
-  border: 1px solid var(--border);
-  border-radius: var(--r);
-  padding: 20px;
-  position: relative; overflow: hidden;
-  transition: border-color .2s, transform .2s, box-shadow .2s;
-  display: flex; flex-direction: column; gap: 0;
-}
-.fc:hover {
-  border-color: var(--border2);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.35);
-}
-.fc.is-flex { border-color: rgba(18,232,168,0.22); background: var(--s1); }
-.fc.is-hack { border-color: rgba(255,120,73,0.22); background: var(--s1); }
-
-/* card tag */
-.fc-tag {
-  font-size: 0.65rem; font-weight: 700; letter-spacing: 0.09em;
-  text-transform: uppercase; padding: 3px 9px; border-radius: 5px;
-  display: inline-flex; align-items: center; gap: 4px;
-  margin-bottom: 14px; width: fit-content;
-}
-.tag-fixed { background: rgba(122,148,170,0.1); color: var(--text2); }
-.tag-flex { background: var(--accent-dim); color: var(--accent); }
-.tag-hack { background: var(--orange-dim); color: var(--orange); }
-
-.fc-subtitle {
-  font-size: 0.78rem; color: var(--text3); margin-bottom: 5px;
-  display: flex; align-items: center; gap: 6px;
-}
-
-.fc-dates {
-  font-size: 0.85rem; color: var(--text2); margin-bottom: 16px;
-}
-.fc-dates strong { color: var(--text); font-weight: 500; }
-
-.fc-price {
-  font-family: 'Bricolage Grotesque', sans-serif;
-  font-size: 2.1rem; font-weight: 800;
-  letter-spacing: -0.04em; color: var(--text);
-  line-height: 1;
-}
-.fc-price sup {
-  font-size: 1rem; vertical-align: top; margin-top: 5px;
-  font-weight: 500; color: var(--text2);
-}
-.fc-price-note {
-  font-size: 0.73rem; color: var(--text3); margin-top: 3px;
-  margin-bottom: 14px;
-}
-
-.fc-saving {
-  display: inline-flex; align-items: center; gap: 5px;
-  font-size: 0.79rem; color: var(--accent); font-weight: 600;
-  margin-bottom: 14px;
-}
-
-.fc-div { height: 1px; background: var(--border); margin: 14px 0; }
-
-/* Budget table */
-.budget-rows { display: flex; flex-direction: column; gap: 5px; }
-.budget-row { display: flex; justify-content: space-between; font-size: 0.8rem; }
-.budget-row .lbl { color: var(--text3); }
-.budget-row .val { color: var(--text2); font-weight: 500; }
-.budget-row.total .lbl { color: var(--text2); font-weight: 600; }
-.budget-row.total .val { color: var(--text); font-weight: 700; }
-
-/* Hack breakdown */
-.hack-box {
-  background: var(--s2); border-radius: 9px;
-  padding: 12px 14px; margin: 12px 0;
-  display: flex; flex-direction: column; gap: 5px;
-}
-.hack-row {
-  display: flex; justify-content: space-between;
-  font-size: 0.79rem; color: var(--text2);
-}
-.hack-row.ht { color: var(--text); font-weight: 600; border-top: 1px solid var(--border); padding-top: 8px; margin-top: 3px; }
-
-/* Hub reason */
-.hub-reason {
-  font-size: 0.75rem; color: var(--text3); line-height: 1.5;
-  padding: 9px 12px; background: var(--s2); border-radius: 8px;
-  margin: 10px 0;
-  border-left: 2px solid rgba(255,120,73,0.3);
-}
-
-/* Badges */
-.fc-badges { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 12px; }
-.badge {
-  font-size: 0.68rem; font-weight: 600;
-  padding: 3px 9px; border-radius: 5px;
-  display: inline-flex; align-items: center; gap: 4px;
-}
-.b-luggage { background: var(--accent2-dim); color: var(--accent2); border: 1px solid rgba(59,158,255,0.15); }
-.b-protect { background: var(--accent-dim); color: var(--accent); border: 1px solid rgba(18,232,168,0.15); }
-.b-warn { background: var(--orange-dim); color: var(--orange); border: 1px solid rgba(255,120,73,0.18); }
-.b-visa-ok { background: rgba(18,232,168,0.06); color: var(--text3); border: 1px solid var(--border); }
-
-/* CTA buttons */
-.cta-row {
-  display: flex; flex-direction: column; gap: 7px;
-  margin-top: 16px;
-}
-
-.cta-btn {
-  display: flex; align-items: center; justify-content: center; gap: 7px;
-  padding: 9px 12px; border-radius: 8px;
-  font-size: 0.8rem; font-weight: 600;
-  text-decoration: none; border: 1px solid var(--border2);
-  background: var(--s2); color: var(--text2);
-  cursor: pointer; transition: all .18s;
-  font-family: 'Instrument Sans', sans-serif;
-}
-.cta-btn:hover { border-color: var(--accent2); color: var(--accent2); background: var(--accent2-dim); }
-.cta-btn.primary {
-  background: var(--accent-dim); border-color: rgba(18,232,168,0.25);
-  color: var(--accent);
-}
-.cta-btn.primary:hover { background: rgba(18,232,168,0.2); }
-
-.cta-btn.claude-btn {
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-  border-color: rgba(138,43,226,0.35);
-  color: #c084fc;
-  margin-top: 4px;
-  position: relative;
-  overflow: hidden;
-}
-.cta-btn.claude-btn:hover {
-  border-color: rgba(192,132,252,0.6);
-  color: #e9d5ff;
-  background: linear-gradient(135deg, #1e1535 0%, #1a1040 100%);
-  box-shadow: 0 0 16px rgba(138,43,226,0.2);
-}
-.claude-pulse {
-  width: 7px; height: 7px; border-radius: 50%;
-  background: #c084fc;
-  flex-shrink: 0;
-  animation: pulse 2s ease-in-out infinite;
-}
-@keyframes pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.4; transform: scale(0.7); }
-}
-.cta-label { font-size: 0.65rem; letter-spacing: 0.06em; text-transform: uppercase; opacity: .7; }
-.cta-logo { font-size: 1rem; }
-
-/* empty */
-.empty { text-align: center; padding: 80px 20px; display: none; }
-.empty.on { display: block; }
-.empty h3 { font-family: 'Bricolage Grotesque', sans-serif; font-size: 1.1rem; color: var(--text2); margin-bottom: 8px; }
-.empty p { font-size: 0.85rem; color: var(--text3); }
-
-/* ── AIRPORT INFO PANEL ── */
-.ap-panel {
-  margin-top: 16px;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  overflow: hidden;
-}
-
-.ap-toggle {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 11px 16px;
-  background: var(--s2);
-  cursor: pointer;
-  user-select: none;
-  transition: background .18s;
-  font-size: 0.82rem;
-  color: var(--text2);
-  font-weight: 500;
-}
-.ap-toggle:hover { background: var(--s3); }
-.ap-toggle .ap-chevron {
-  font-size: 0.7rem; color: var(--text3);
-  transition: transform .22s;
-}
-.ap-toggle.open .ap-chevron { transform: rotate(180deg); }
-
-.ap-body {
-  display: none;
-  padding: 16px;
-  background: var(--s1);
-  border-top: 1px solid var(--border);
-}
-.ap-body.open { display: block; }
-
-.ap-intro {
-  font-size: 0.8rem; color: var(--text2); line-height: 1.6;
-  margin-bottom: 14px;
-  padding: 10px 12px;
-  background: var(--s2); border-radius: 8px;
-  border-left: 2px solid var(--accent2);
-}
-
-.ap-list { display: flex; flex-direction: column; gap: 10px; }
-
-.ap-item {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 10px 14px;
-  padding: 12px 14px;
-  background: var(--s2); border-radius: 9px;
-  border: 1px solid var(--border);
-  align-items: start;
-}
-.ap-item.best { border-color: rgba(18,232,168,0.2); }
-
-.ap-iata {
-  font-family: 'Bricolage Grotesque', sans-serif;
-  font-size: 1.1rem; font-weight: 800;
-  letter-spacing: -0.02em;
-  color: var(--text);
-  background: var(--s3);
-  border-radius: 6px;
-  padding: 4px 10px;
-  text-align: center;
-  min-width: 52px;
-}
-.ap-item.best .ap-iata { background: var(--accent-dim); color: var(--accent); }
-
-.ap-info {}
-.ap-name { font-size: 0.88rem; font-weight: 600; color: var(--text); margin-bottom: 3px; display: flex; align-items: center; gap: 7px; }
-.ap-name .best-badge {
-  font-size: 0.62rem; font-weight: 700; letter-spacing: 0.07em;
-  text-transform: uppercase; padding: 2px 7px; border-radius: 4px;
-  background: var(--accent-dim); color: var(--accent);
-}
-.ap-desc { font-size: 0.78rem; color: var(--text2); line-height: 1.55; }
-.ap-note { font-size: 0.73rem; color: var(--text3); margin-top: 4px; font-style: italic; }
-
-/* Airport search dropdown */
-#airportSearch:focus {
-  border-color: var(--accent) !important;
-  box-shadow: 0 0 0 3px rgba(18,232,168,0.08) !important;
-}
-.ap-drop-item {
-  padding: 10px 14px; cursor: pointer;
-  font-size: 0.85rem; color: var(--text2);
-  border-bottom: 1px solid var(--border);
-  transition: background .15s;
-  display: flex; align-items: center; gap: 10px;
-}
-.ap-drop-item:last-child { border-bottom: none; }
-.ap-drop-item:hover, .ap-drop-item.selected { background: var(--s4); color: var(--text); }
-.ap-drop-item .iata-pill {
-  font-family: 'Bricolage Grotesque', sans-serif;
-  font-size: 0.75rem; font-weight: 700;
-  background: var(--s2); color: var(--accent);
-  padding: 2px 7px; border-radius: 5px; flex-shrink: 0;
-}
-.ap-drop-item .ap-city { font-size: 0.75rem; color: var(--text3); margin-left: auto; }
-
-/* Accommodation price row */
-.accom-row {
-  background: var(--s2); border-radius: 8px;
-  padding: 10px 12px; margin: 10px 0;
-}
-.accom-title {
-  font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em;
-  text-transform: uppercase; color: var(--text3);
-  margin-bottom: 8px;
-}
-.accom-grid {
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px;
-}
-.accom-cell {
-  text-align: center; padding: 6px 4px;
-  background: var(--s1); border-radius: 6px;
-  border: 1px solid var(--border);
-}
-.accom-cell .ac-label { font-size: 0.62rem; color: var(--text3); margin-bottom: 3px; }
-.accom-cell .ac-price { font-size: 0.88rem; font-weight: 600; color: var(--text2); }
-.accom-cell.best-accom { border-color: rgba(18,232,168,0.2); }
-.accom-cell.best-accom .ac-price { color: var(--accent); }
-.accom-note-txt {
-  font-size: 0.72rem; color: var(--text3); margin-top: 8px; line-height: 1.5;
-  font-style: italic;
-}
-
-/* Theme toggle button */
-.theme-btn {
-  display: flex; align-items: center; gap: 6px;
-  background: var(--s2); border: 1px solid var(--border2);
-  border-radius: 20px; padding: 5px 12px;
-  color: var(--text2); font-size: 0.78rem;
-  cursor: pointer; font-family: 'Instrument Sans', sans-serif;
-  transition: all .2s;
-}
-.theme-btn:hover { border-color: var(--accent); color: var(--accent); }
-
-/* disclaimer */
-.disclaimer {
-  text-align: center; padding: 32px 32px 60px;
-  background: var(--bg);
-  font-size: 0.75rem; color: var(--text3); line-height: 1.7;
-  max-width: 680px; margin: 0 auto;
-}
-.disclaimer strong { color: var(--text2); }
+html{scroll-behavior:smooth}
+body{font-family:'Instrument Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;transition:background .3s,color .3s}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:999;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");opacity:.6}
+
+/* HEADER */
+header{position:sticky;top:0;z-index:200;height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;background:rgba(5,8,11,0.82);backdrop-filter:blur(24px);border-bottom:1px solid var(--border)}
+[data-theme="light"] header{background:rgba(240,244,248,0.9)}
+.logo{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:1.3rem;letter-spacing:-.03em;display:flex;align-items:center;gap:9px}
+.logo-icon{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--accent),#0fcf90);display:flex;align-items:center;justify-content:center;font-size:15px}
+.logo em{font-style:normal;color:var(--accent)}
+.header-right{display:flex;align-items:center;gap:12px}
+.theme-btn{display:flex;align-items:center;gap:6px;background:var(--s2);border:1px solid var(--border2);border-radius:20px;padding:5px 12px;color:var(--text2);font-size:.78rem;cursor:pointer;font-family:'Instrument Sans',sans-serif;transition:all .2s}
+.theme-btn:hover{border-color:var(--accent);color:var(--accent)}
+
+/* HERO */
+.hero{padding:72px 32px 56px;text-align:center;position:relative;overflow:hidden;background:var(--bg)}
+.hero-bg{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 700px 300px at 50% -60px,rgba(18,232,168,.07) 0%,transparent 70%),radial-gradient(ellipse 400px 200px at 80% 80%,rgba(59,158,255,.05) 0%,transparent 70%)}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:6px;font-size:.72rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);border:1px solid rgba(18,232,168,.2);border-radius:20px;padding:5px 14px;margin-bottom:22px;background:rgba(18,232,168,.05)}
+.hero h1{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:clamp(2.2rem,5.5vw,4rem);letter-spacing:-.04em;line-height:1.08;margin-bottom:18px}
+.hero h1 span{background:linear-gradient(135deg,var(--accent) 0%,var(--accent2) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{color:var(--text2);font-size:1rem;line-height:1.65;max-width:560px;margin:0 auto 48px}
+
+/* SEARCH PANEL */
+.search-panel{max-width:920px;margin:0 auto;background:var(--s1);border:1px solid var(--border2);border-radius:20px;padding:28px 28px 24px;box-shadow:var(--shadow);position:relative;z-index:10}
+.sp-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:12px;margin-bottom:16px}
+@media(max-width:760px){.sp-grid{grid-template-columns:1fr 1fr}.sp-grid .field:first-child{grid-column:span 2}}
+@media(max-width:480px){.sp-grid{grid-template-columns:1fr}.sp-grid .field:first-child{grid-column:span 1}header{padding:0 16px}.hero{padding:48px 16px 40px}.search-panel{padding:20px 16px 18px}.results-wrap{padding:0 16px}}
+.field label{display:block;font-size:.68rem;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--text3);margin-bottom:7px}
+.field select,.field input[type="date"],.field input[type="text"]{width:100%;background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:11px 14px;color:var(--text);font-family:'Instrument Sans',sans-serif;font-size:16px;outline:none;transition:border-color .2s,box-shadow .2s;appearance:none;-webkit-appearance:none}
+.field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%233d5263' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;cursor:pointer}
+.field select:focus,.field input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(18,232,168,.08)}
+.field select option{background:#111820}
+.sp-toggles{display:flex;flex-wrap:wrap;gap:18px 28px;align-items:center;padding:14px 0 18px;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:18px}
+.tog{display:flex;align-items:center;gap:9px;cursor:pointer;user-select:none}
+.tog input{display:none}
+.tog-track{width:40px;height:22px;background:var(--s3);border:1px solid var(--border2);border-radius:11px;position:relative;transition:background .2s,border-color .2s;flex-shrink:0}
+.tog-track::after{content:'';position:absolute;top:3px;left:3px;width:14px;height:14px;background:var(--text3);border-radius:50%;transition:transform .22s,background .22s}
+.tog input:checked+.tog-track{background:rgba(18,232,168,.18);border-color:var(--accent)}
+.tog input:checked+.tog-track::after{transform:translateX(18px);background:var(--accent)}
+.tog-label{font-size:.84rem;color:var(--text2);line-height:1.4}
+.btn-search{width:100%;padding:15px;background:var(--accent);color:#05080b;font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:.98rem;border:none;border-radius:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity .18s,transform .15s}
+.btn-search:hover{opacity:.88;transform:translateY(-1px)}
+.btn-search:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+/* AIRPORT AUTOCOMPLETE */
+.airport-wrap{position:relative}
+.ap-dropdown{display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--s3);border:1px solid var(--border2);border-radius:10px;z-index:100;max-height:220px;overflow-y:auto;box-shadow:var(--shadow)}
+.ap-drop-item{padding:10px 14px;cursor:pointer;font-size:.85rem;color:var(--text2);border-bottom:1px solid var(--border);transition:background .15s;display:flex;align-items:center;gap:10px}
+.ap-drop-item:last-child{border-bottom:none}
+.ap-drop-item:hover{background:var(--s4);color:var(--text)}
+.iata-pill{font-family:'Bricolage Grotesque',sans-serif;font-size:.75rem;font-weight:700;background:var(--s2);color:var(--accent);padding:2px 7px;border-radius:5px;flex-shrink:0}
+.ap-city{font-size:.75rem;color:var(--text3);margin-left:auto}
+
+/* RESULTS */
+.results-wrap{max-width:920px;margin:56px auto 100px;padding:0 32px;background:var(--bg)}
+.loading-state{display:none;text-align:center;padding:70px 20px}
+.loading-state.on{display:block}
+.spinner-ring{width:44px;height:44px;margin:0 auto 20px;border:2px solid var(--s3);border-top-color:var(--accent);border-radius:50%;animation:spin .75s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-msg{font-size:.88rem;color:var(--text2);margin-bottom:6px}
+.loading-step{font-size:.78rem;color:var(--text3);font-style:italic;min-height:18px}
+.rh{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:28px;flex-wrap:wrap;gap:14px}
+.rh-title{font-family:'Bricolage Grotesque',sans-serif;font-size:1.15rem;font-weight:700;color:var(--text)}
+.rh-sub{font-size:.78rem;color:var(--text3);margin-top:3px}
+.sort-bar{display:flex;gap:8px;flex-wrap:wrap}
+.sort-btn{padding:5px 13px;border-radius:18px;border:1px solid var(--s4);background:var(--s1);color:var(--text2);font-size:.78rem;cursor:pointer;font-family:'Instrument Sans',sans-serif;transition:all .18s}
+.sort-btn.active,.sort-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-dim)}
+.meteo-notice{display:none;align-items:center;gap:10px;background:rgba(255,77,106,.07);border:1px solid rgba(255,77,106,.15);border-radius:10px;padding:11px 16px;font-size:.82rem;color:var(--red);margin-bottom:22px}
+.meteo-notice.on{display:flex}
+.meteo-notice a{color:var(--red);text-decoration:underline;cursor:pointer;margin-left:6px}
+.empty{text-align:center;padding:80px 20px;display:none}
+.empty.on{display:block}
+.empty h3{font-family:'Bricolage Grotesque',sans-serif;font-size:1.1rem;color:var(--text2);margin-bottom:8px}
+.empty p{font-size:.85rem;color:var(--text3)}
+
+/* DESTINATION BLOCKS */
+.dest-block{margin-bottom:44px;opacity:0;animation:fadeUp .45s ease forwards}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.dest-hd{display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.dest-flag{font-size:1.9rem;line-height:1}
+.dest-name{font-family:'Bricolage Grotesque',sans-serif;font-size:1.15rem;font-weight:700;letter-spacing:-.01em;color:var(--text)}
+.dest-region{font-size:.78rem;color:var(--text3);margin-top:2px}
+.dest-maps{display:inline-flex;align-items:center;gap:5px;font-size:.72rem;color:var(--accent2);text-decoration:none;border:1px solid var(--accent2-dim);background:var(--accent2-dim);border-radius:5px;padding:2px 8px;margin-top:3px;transition:all .18s}
+.dest-maps:hover{background:var(--accent2);color:#fff}
+.wx-badge{margin-left:auto;flex-shrink:0;display:flex;align-items:center;gap:6px;padding:5px 12px;border-radius:18px;font-size:.76rem;font-weight:600;position:relative;cursor:default}
+.wx-badge.green{background:rgba(18,232,168,.1);color:var(--green);border:1px solid rgba(18,232,168,.2)}
+.wx-badge.yellow{background:rgba(245,200,66,.1);color:var(--yellow);border:1px solid rgba(245,200,66,.2)}
+.wx-badge.red{background:rgba(255,77,106,.1);color:var(--red);border:1px solid rgba(255,77,106,.2)}
+.wx-badge .tip{display:none;position:absolute;bottom:calc(100% + 8px);right:0;background:var(--s3);border:1px solid var(--border2);border-radius:8px;padding:8px 12px;font-size:.76rem;color:var(--text2);white-space:nowrap;box-shadow:var(--shadow);font-weight:400;z-index:50}
+.wx-badge:hover .tip{display:block}
+
+/* CARDS */
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px}
+.fc{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:20px;position:relative;overflow:hidden;transition:border-color .2s,transform .2s,box-shadow .2s;display:flex;flex-direction:column;gap:0}
+.fc:hover{border-color:var(--border2);transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,.35)}
+.fc.is-flex{border-color:rgba(18,232,168,.22)}
+.fc.is-hack{border-color:rgba(255,120,73,.22)}
+.fc-tag{font-size:.65rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;padding:3px 9px;border-radius:5px;display:inline-flex;align-items:center;gap:4px;margin-bottom:14px;width:fit-content}
+.tag-fixed{background:rgba(122,148,170,.1);color:var(--text2)}
+.tag-flex{background:var(--accent-dim);color:var(--accent)}
+.tag-hack{background:var(--orange-dim);color:var(--orange)}
+.fc-subtitle{font-size:.78rem;color:var(--text3);margin-bottom:5px}
+.fc-dates{font-size:.85rem;color:var(--text2);margin-bottom:16px}
+.fc-dates strong{color:var(--text);font-weight:500}
+.fc-price{font-family:'Bricolage Grotesque',sans-serif;font-size:2.1rem;font-weight:800;letter-spacing:-.04em;color:var(--text);line-height:1}
+.fc-price sup{font-size:1rem;vertical-align:top;margin-top:5px;font-weight:500;color:var(--text2)}
+.fc-price-note{font-size:.73rem;color:var(--text3);margin-top:3px;margin-bottom:14px}
+.fc-saving{display:inline-flex;align-items:center;gap:5px;font-size:.79rem;color:var(--accent);font-weight:600;margin-bottom:14px}
+.fc-div{height:1px;background:var(--border);margin:14px 0}
+.budget-rows{display:flex;flex-direction:column;gap:5px}
+.budget-row{display:flex;justify-content:space-between;font-size:.8rem}
+.budget-row .lbl{color:var(--text3)}
+.budget-row .val{color:var(--text2);font-weight:500}
+.budget-row.total .lbl{color:var(--text2);font-weight:600}
+.budget-row.total .val{color:var(--text);font-weight:700}
+.hack-box{background:var(--s2);border-radius:9px;padding:12px 14px;margin:12px 0;display:flex;flex-direction:column;gap:5px}
+.hack-row{display:flex;justify-content:space-between;font-size:.79rem;color:var(--text2)}
+.hack-row.ht{color:var(--text);font-weight:600;border-top:1px solid var(--border);padding-top:8px;margin-top:3px}
+a.hack-link{text-decoration:none;color:var(--text2);transition:background .15s,color .15s;border-radius:6px;padding:5px 6px;margin:0 -6px;cursor:pointer}
+a.hack-link:hover{background:var(--s3);color:var(--text)}
+.hack-search-lbl{font-size:.72rem;color:var(--accent);flex-shrink:0}
+.hub-reason{font-size:.75rem;color:var(--text3);line-height:1.5;padding:9px 12px;background:var(--s2);border-radius:8px;margin:10px 0;border-left:2px solid rgba(255,120,73,.3)}
+.fc-badges{display:flex;flex-wrap:wrap;gap:5px;margin:12px 0 10px}
+.badge{font-size:.67rem;font-weight:600;padding:3px 9px;border-radius:5px;letter-spacing:.04em}
+.b-luggage{background:rgba(59,158,255,.1);color:var(--accent2)}
+.b-protect{background:var(--accent-dim);color:var(--accent)}
+.b-warn{background:var(--orange-dim);color:var(--orange)}
+.b-visa-ok{background:rgba(18,232,168,.08);color:var(--green)}
+.cta-row{display:flex;flex-direction:column;gap:6px;margin-top:14px}
+.cta-btn{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:9px;border:1px solid var(--border2);background:var(--s2);color:var(--text2);font-size:.82rem;text-decoration:none;transition:all .18s;cursor:pointer}
+.cta-btn:hover{border-color:var(--accent2);color:var(--text);background:var(--s3)}
+.cta-btn.primary{background:var(--accent-dim);border-color:rgba(18,232,168,.3);color:var(--accent)}
+.cta-btn.primary:hover{background:var(--accent);color:#05080b}
+.cta-btn strong{font-weight:600}
+.claude-sep{height:1px;background:var(--border);margin:6px 0}
+.claude-btn{background:rgba(138,43,226,.08);border-color:rgba(138,43,226,.2);color:#c084fc}
+.claude-btn:hover{background:rgba(138,43,226,.15);border-color:#c084fc;color:#e9d5ff}
+.claude-pulse{width:7px;height:7px;border-radius:50%;background:#c084fc;flex-shrink:0;animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
+.cta-label{font-size:.65rem;letter-spacing:.06em;text-transform:uppercase;opacity:.7;margin-left:auto}
+.cta-logo{font-size:1rem}
+.accom-row{background:var(--s2);border-radius:8px;padding:10px 12px;margin:10px 0}
+.accom-title{font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-bottom:8px}
+.accom-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.accom-cell{text-align:center;padding:6px 4px;background:var(--s1);border-radius:6px;border:1px solid var(--border)}
+.accom-cell .ac-label{font-size:.62rem;color:var(--text3);margin-bottom:3px}
+.accom-cell .ac-price{font-size:.88rem;font-weight:600;color:var(--text2)}
+.accom-cell.best-accom{border-color:rgba(18,232,168,.2)}
+.accom-cell.best-accom .ac-price{color:var(--accent)}
+.accom-note-txt{font-size:.72rem;color:var(--text3);margin-top:8px;line-height:1.5;font-style:italic}
+
+/* AI CONTEXT BANNER */
+.ai-banner{background:linear-gradient(135deg,rgba(18,232,168,.06),rgba(59,158,255,.06));border:1px solid rgba(18,232,168,.12);border-radius:12px;padding:14px 18px;margin-bottom:28px;font-size:.82rem;color:var(--text2);line-height:1.6}
+.ai-banner strong{color:var(--accent)}
+
+/* ERROR */
+.error-box{background:rgba(255,77,106,.07);border:1px solid rgba(255,77,106,.2);border-radius:10px;padding:18px;color:var(--red);font-size:.85rem;text-align:center;margin-bottom:20px}
+
+.disclaimer{text-align:center;padding:32px 32px 60px;background:var(--bg);font-size:.75rem;color:var(--text3);line-height:1.7;max-width:680px;margin:0 auto}
+.disclaimer strong{color:var(--text2)}
 </style>
 </head>
 <body>
 
 <header>
   <div class="logo">
-    <div class="logo-icon">✈</div>
-    Flexi<em>Fly</em>
+    <svg width="36" height="36" viewBox="0 0 36 36" style="flex-shrink:0">
+      <rect width="36" height="36" rx="10" fill="#12e8a8"/>
+      <g transform="translate(5,7)">
+        <path d="M3 11 Q10 7 20 11 Q10 15 3 11Z" fill="#0d1a26"/>
+        <path d="M10 11 L23 3 L23 6.5 L14 11Z" fill="#0d1a26"/>
+        <path d="M10 11 L22 19 L22 15.5 L14 11Z" fill="rgba(13,26,38,0.45)"/>
+        <path d="M3 11 L0 7 L2.5 11 L0 15Z" fill="#0d1a26"/>
+      </g>
+    </svg>
+    <div>
+      <div style="font-family:'Bricolage Grotesque',serif;font-weight:800;font-size:1.25rem;letter-spacing:-.03em;line-height:1">Flexi<em>Fly</em></div>
+      <div style="font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);font-weight:600;line-height:1;margin-top:2px">AI Travel Assistant</div>
+    </div>
   </div>
-  <div class="header-right" style="display:flex;align-items:center;gap:12px">
-    <span style="font-size:0.75rem;color:var(--text3);letter-spacing:0.07em;text-transform:uppercase">🌊 Mare Esotico · Agosto</span>
-    <button class="theme-btn" id="themeBtn" onclick="toggleTheme()">☀️ Tema chiaro</button>
+  <div class="header-right">
+    <button class="theme-btn" id="themeBtn" onclick="toggleTheme()">🌙 Tema scuro</button>
   </div>
 </header>
 
 <section class="hero">
   <div class="hero-bg"></div>
-  <div class="hero-eyebrow">✦ Assistente voli intelligente</div>
-  <h1>Trova il miglior volo.<br><span>Noi pensiamo al resto.</span></h1>
-  <p class="hero-sub">Inserisci le date, la flessibilità e il tuo aeroporto. FlexiFly calcola tutte le combinazioni ottimali — hub europei, auto-connessioni, visti evitati — e ti apre la ricerca già pronta su Skyscanner, Google Flights e Kiwi.</p>
+  <div class="hero-eyebrow">✦ Powered by AI · Destinazioni reali per ogni periodo</div>
+  <h1>Trova il viaggio perfetto.<br><span>L'AI pensa al resto.</span></h1>
+  <p class="hero-sub">Inserisci le tue date e il tuo aeroporto. L'AI analizza il periodo, le condizioni meteo, gli eventi e ti suggerisce le destinazioni più adatte — con hub europei, hack multi-biglietto e link diretti ai motori di ricerca.</p>
 
   <div class="search-panel">
     <div class="sp-grid">
       <div class="field">
         <label>Aeroporto di partenza</label>
-        <div style="position:relative">
+        <div class="airport-wrap">
           <input type="text" id="airportSearch" placeholder="Cerca aeroporto o città…" autocomplete="off"
-            oninput="filterAirports()" onfocus="showDropdown()" onblur="hideDropdown()"
-            style="width:100%;background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:11px 14px;color:var(--text);font-family:'Instrument Sans',sans-serif;font-size:16px;outline:none;transition:border-color .2s,box-shadow .2s;-webkit-appearance:none;">
-          <div id="airportDropdown" style="display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--s3);border:1px solid var(--border2);border-radius:10px;z-index:100;max-height:220px;overflow-y:auto;box-shadow:var(--shadow)"></div>
+            oninput="filterAirports()" onfocus="showDropdown()" onblur="hideDropdown()">
+          <div id="airportDropdown" class="ap-dropdown"></div>
           <input type="hidden" id="airport" value="MXP">
         </div>
       </div>
       <div class="field">
         <label>Data partenza</label>
-        <input type="date" id="depDate" value="2025-08-07">
+        <input type="date" id="depDate">
       </div>
       <div class="field">
         <label>Data ritorno</label>
-        <input type="date" id="retDate" value="2025-08-21">
+        <input type="date" id="retDate">
       </div>
       <div class="field">
         <label>Flessibilità</label>
@@ -762,7 +274,7 @@ header {
       <label class="tog">
         <input type="checkbox" id="hideRed">
         <span class="tog-track"></span>
-        <span class="tog-label">Nascondi mete con monsoni/uragani 🔴</span>
+        <span class="tog-label">Nascondi mete con meteo sconsigliato 🔴</span>
       </label>
       <label class="tog">
         <input type="checkbox" id="showHack" checked>
@@ -772,7 +284,7 @@ header {
     </div>
 
     <button class="btn-search" id="searchBtn" onclick="doSearch()">
-      <span>🔍</span> Cerca le migliori opzioni
+      <span>✨</span> Cerca con AI le migliori opzioni
     </button>
   </div>
 </section>
@@ -780,1117 +292,508 @@ header {
 <section class="results-wrap" id="resultsWrap">
   <div class="loading-state" id="loading">
     <div class="spinner-ring"></div>
-    <div class="loading-msg">Calcolo le combinazioni ottimali…</div>
+    <div class="loading-msg">L'AI sta analizzando il periodo…</div>
     <div class="loading-step" id="lstep"></div>
   </div>
-
   <div class="empty" id="empty">
     <h3>Nessuna destinazione trovata</h3>
     <p>Prova ad aumentare la flessibilità o disattiva il filtro meteo.</p>
   </div>
-
   <div class="meteo-notice" id="meteoNotice">
     ⚠ <span id="meteoCount">0</span> mete con meteo sconsigliato nascoste.
     <a onclick="showHiddenRed()">Mostra comunque</a>
   </div>
-
   <div id="resultsContainer"></div>
 </section>
 
 <div class="disclaimer">
-  <strong>Come funziona:</strong> FlexiFly calcola le combinazioni ottimali (date flessibili, hub europei strategici, auto-connessioni) e ti apre la ricerca già precompilata sui motori di prenotazione. I prezzi indicativi mostrati sono stime basate su tariffe storiche di agosto — i prezzi reali li trovi cliccando su Skyscanner, Google Flights o Kiwi. FlexiFly non vende voli e non guadagna commissioni.
+  <strong>Come funziona:</strong> FlexiFly usa l'AI per identificare le destinazioni migliori in base al periodo scelto — non un database fisso. I link aprono le ricerche reali su Skyscanner, Google Flights e Kiwi con i parametri già precompilati. I prezzi indicativi sono stime storiche, quelli reali li trovi cliccando sui motori. FlexiFly non vende voli.
 </div>
 
 <script>
-// FlexiFly v2.0 — bug fix renderAccom + light theme
-// ═══════════════════════════════════════════════════════
-// DATABASE DESTINAZIONI
-// Tutti i dati si basano su conoscenza reale:
-// - Codici IATA verificati
-// - Hub europei ottimali per evitare ESTA/visti transit
-// - Meteo agosto da dati climatici storici
-// - Costo della vita da fonti come Numbeo/Lonely Planet
-// ═══════════════════════════════════════════════════════
+// FlexiFly v3.0 — AI-powered dynamic destinations
 
-const DESTS = [
-  // ── OCEANO INDIANO ──
-  {
-    id:'maldives', name:'Maldive', country:'Maldive', flag:'🇲🇻',
-    region:'Oceano Indiano', iata:'MLE', kiwiSlug:'male-maldives',
-    weather:'green', wxText:'Stagione secca — cielo perfetto tutto agosto',
-    visaTransitIssue: false,
-    hub:'FRA', hubName:'Francoforte', hubAlt:'DXB',
-    hubReason:'Lufthansa via FRA o Emirates via Dubai — nessuno scalo negli USA, niente ESTA. Alternativa: Qatar Airways via DOH.',
-    airlines:'Lufthansa / Emirates / Qatar Airways',
-    living:{ budget:90, medium:200, luxury:550 },
-    accom:{ hostel:null, budget:160, medium:350, resort:900 },
-    accomNote:'Guesthouse su isole abitate da €80; resort su atolli privati da €350. Tutto-incluso obbligatorio in molti resort.',
-    priceRange:{ low:820, high:1200 },
-    hackSaving:{ low:150, high:350 },
-  },
-  {
-    id:'seychelles', name:'Seychelles', country:'Seychelles', flag:'🇸🇨',
-    region:'Oceano Indiano', iata:'SEZ', kiwiSlug:'mahe-seychelles',
-    weather:'green', wxText:'Luglio-agosto: stagione secca, clima splendido',
-    visaTransitIssue: false,
-    hub:'CDG', hubName:'Parigi CDG', hubAlt:'FRA',
-    hubReason:'Air France diretta CDG→SEZ — partendo da MXP/FCO prendi un low-cost per CDG (Ryanair/EasyJet ~€60-90 RT) e voli con Air France. Zero ESTA.',
-    airlines:'Air France / Condor / Air Seychelles',
-    living:{ budget:100, medium:200, luxury:550 },
-    accom:{ hostel:45, budget:120, medium:250, resort:700 },
-    accomNote:'Guesthouse da €45/notte; hotel mid-range €120-250; resort de charme da €350. Prezzi alti per la regione.',
-    priceRange:{ low:880, high:1350 },
-    hackSaving:{ low:120, high:300 },
-  },
-  {
-    id:'mauritius', name:'Mauritius', country:'Mauritius', flag:'🇲🇺',
-    region:'Oceano Indiano', iata:'MRU', kiwiSlug:'port-louis-mauritius',
-    weather:'green', wxText:'Inverno australe in agosto — fresco (24°C), secco, perfetto',
-    visaTransitIssue: false,
-    hub:'CDG', hubName:'Parigi CDG', hubAlt:'FRA',
-    hubReason:'Air France da CDG o Condor da FRA. Nessun visto in transito richiesto. Ryanair/EasyJet ti porta a CDG per ~€70 RT.',
-    airlines:'Air France / Air Mauritius / Condor',
-    living:{ budget:55, medium:130, luxury:380 },
-    accom:{ hostel:20, budget:60, medium:140, resort:450 },
-    accomNote:'Hostel da €20; guesthouse da €60; hotel 4★ €140-220; resort 5★ da €350. Vasta scelta per ogni budget.',
-    priceRange:{ low:750, high:1100 },
-    hackSaving:{ low:100, high:250 },
-  },
-  {
-    id:'reunion', name:'Réunion (Île Bourbon)', country:'Francia DOM', flag:'🇷🇪',
-    region:'Oceano Indiano', iata:'RUN', kiwiSlug:'saint-denis-reunion',
-    weather:'green', wxText:'Agosto: stagione secca e fresca — ideale per trekking e mare',
-    visaTransitIssue: false,
-    hub:'CDG', hubName:'Parigi CDG', hubAlt:null,
-    hubReason:'Territorio francese d\'oltremare: nessun visto. Air France diretta da CDG. Low-cost da Italia a CDG ~€60-80 RT.',
-    airlines:'Air France / Air Austral',
-    living:{ budget:70, medium:140, luxury:320 },
-    accom:{ hostel:25, budget:70, medium:130, resort:300 },
-    accomNote:'Gîtes (tipici B&B locali) da €35; hotel da €70; prezzi da territorio francese, non da resort tropicale.',
-    priceRange:{ low:680, high:980 },
-    hackSaving:{ low:90, high:220 },
-  },
-  // ── AFRICA ORIENTALE ──
-  {
-    id:'zanzibar', name:'Zanzibar', country:'Tanzania', flag:'🇹🇿',
-    region:'Africa Orientale', iata:'ZNZ', kiwiSlug:'zanzibar-tanzania',
-    weather:'yellow', wxText:'Costa nord asciutta in agosto, possibili piovaschi brevi nel pomeriggio — ancora molto bello',
-    visaTransitIssue: false,
-    hub:'FRA', hubName:'Francoforte', hubAlt:'IST',
-    hubReason:'Ethiopian Airlines via Addis Abeba (ADD) o Turkish Airlines via Istanbul (IST) — entrambi senza ESTA, senza visti speciali in transito per italiani.',
-    airlines:'Ethiopian Airlines / Turkish Airlines / Kenya Airways',
-    living:{ budget:35, medium:80, luxury:220 },
-    accom:{ hostel:12, budget:40, medium:90, resort:280 },
-    accomNote:'Hostel da €12; guesthouse Stone Town da €25; beach hotel a Nungwi da €60; resort da €180. Ottimo rapporto qualità/prezzo.',
-    priceRange:{ low:580, high:850 },
-    hackSaving:{ low:80, high:200 },
-  },
-  {
-    id:'kenya_coast', name:'Watamu / Malindi', country:'Kenya', flag:'🇰🇪',
-    region:'Africa Orientale', iata:'MBA', kiwiSlug:'mombasa-kenya',
-    weather:'yellow', wxText:'Costa keniota in agosto: stagione secca sulla costa, qualche nuvola ma mare OK',
-    visaTransitIssue: false,
-    hub:'FRA', hubName:'Francoforte', hubAlt:'IST',
-    hubReason:'Kenya Airways via Nairobi o Ethiopian via ADD, Turkish via IST. Nessun transit visa per italiani. ETA Kenya online ~$30.',
-    airlines:'Kenya Airways / Ethiopian / Turkish',
-    living:{ budget:28, medium:65, luxury:190 },
-    accom:{ hostel:10, budget:35, medium:75, resort:200 },
-    accomNote:'Banda (bungalow locali) da €15; hotel Watamu da €35-80; lodge fronte-mare da €120. Kenya è economico per gli standard africani.',
-    priceRange:{ low:520, high:760 },
-    hackSaving:{ low:70, high:180 },
-  },
-  // ── AFRICA ATLANTICO ──
-  {
-    id:'cabo_verde', name:'Capo Verde (Sal & Boa Vista)', country:'Capo Verde', flag:'🇨🇻',
-    region:'Atlantico / Africa', iata:'SID', kiwiSlug:'sal-cape-verde',
-    weather:'green', wxText:'Agosto: venti alisei freschi (26-28°C), mare mosso ma balneabile, zero piogge',
-    visaTransitIssue: false,
-    hub:'LIS', hubName:'Lisbona', hubAlt:'CDG',
-    hubReason:'TAP Air Portugal ha voli diretti LIS→SID più volte a settimana. Da Italia: Ryanair/EasyJet per LIS ~€60-90 RT.',
-    airlines:'TAP Air Portugal / TACV Cabo Verde Airlines',
-    living:{ budget:30, medium:65, luxury:170 },
-    accom:{ hostel:15, budget:40, medium:80, resort:200 },
-    accomNote:'Pensioni locali da €20; hotel Santa Maria (Sal) da €40-90; resort 4★ da €120. Prezzi abbordabili.',
-    priceRange:{ low:420, high:650 },
-    hackSaving:{ low:60, high:160 },
-  },
-  // ── CARAIBI (senza ESTA) ──
-  {
-    id:'aruba', name:'Aruba', country:'Aruba (Olanda)', flag:'🇦🇼',
-    region:'Caraibi ABC', iata:'AUA', kiwiSlug:'aruba',
-    weather:'green', wxText:'Aruba è fuori dalla fascia uragani — agosto perfetto, sole garantito, vento degli alisei fresco',
-    visaTransitIssue: false,
-    hub:'AMS', hubName:'Amsterdam', hubAlt:'MAD',
-    hubReason:'KLM vola diretto AMS→AUA più volte a settimana — nessun scalo USA, niente ESTA. Da Italia: volo low-cost per AMS (~€70-100 RT), poi KLM intercontinentale.',
-    airlines:'KLM / TUI fly / Iberia via MAD',
-    living:{ budget:75, medium:155, luxury:380 },
-    accom:{ hostel:30, budget:90, medium:180, resort:450 },
-    accomNote:'Hostel da €30; guesthouse da €70; hotel Palm Beach da €140-220; resort 5★ da €350. Aruba non è economica.',
-    priceRange:{ low:750, high:1100 },
-    hackSaving:{ low:100, high:280 },
-  },
-  {
-    id:'curacao', name:'Curaçao', country:'Curaçao (Olanda)', flag:'🇨🇼',
-    region:'Caraibi ABC', iata:'CUR', kiwiSlug:'willemstad-curacao',
-    weather:'green', wxText:'Fuori dalla fascia uragani — agosto ideale, acque cristalline',
-    visaTransitIssue: false,
-    hub:'AMS', hubName:'Amsterdam', hubAlt:'MAD',
-    hubReason:'KLM diretta AMS→CUR, più voli a settimana. Stesso hub di Aruba, eventualmente combinabile. Nessun ESTA.',
-    airlines:'KLM / TUI fly',
-    living:{ budget:72, medium:150, luxury:360 },
-    accom:{ hostel:25, budget:80, medium:160, resort:400 },
-    accomNote:'Airbnb e guesthouse da €50; hotel Willemstad da €100-180; resort fronte mare da €280. Prezzi simili ad Aruba.',
-    priceRange:{ low:780, high:1150 },
-    hackSaving:{ low:110, high:290 },
-  },
-  {
-    id:'colombia_ctg', name:'Cartagena de Indias', country:'Colombia', flag:'🇨🇴',
-    region:'Caraibi / Sudamerica', iata:'CTG', kiwiSlug:'cartagena-colombia',
-    weather:'yellow', wxText:'Agosto: piogge brevi nel tardo pomeriggio, ma mattine e spiagge spesso ottime. Centro storico meraviglioso.',
-    visaTransitIssue: false,
-    hub:'MAD', hubName:'Madrid', hubAlt:'LIS',
-    hubReason:'Iberia e Avianca volano MAD→CTG o MAD→BOG (poi coincidenza interna). Via Madrid non si passa dagli USA, zero ESTA. Da Italia a MAD: Ryanair/Vueling ~€60-90 RT.',
-    airlines:'Iberia / Avianca / Air Europa',
-    living:{ budget:35, medium:80, luxury:210 },
-    accom:{ hostel:12, budget:45, medium:100, resort:280 },
-    accomNote:'Hostel Ciudad Amurallada da €12; hotel da €45-120; boutique hotel nel centro storico da €150. Colombia è molto economica.',
-    priceRange:{ low:680, high:980 },
-    hackSaving:{ low:90, high:230 },
-  },
-  {
-    id:'dr_puntacana', name:'Rep. Dominicana (Punta Cana)', country:'Rep. Dominicana', flag:'🇩🇴',
-    region:'Caraibi', iata:'PUJ', kiwiSlug:'punta-cana-dominican-republic',
-    weather:'yellow', wxText:'Agosto è nella stagione degli uragani ma la probabilità diretta è bassa. Temperature alte, acqua calda. Rischio accettabile.',
-    visaTransitIssue: false,
-    hub:'MAD', hubName:'Madrid', hubAlt:'LIS',
-    hubReason:'Iberia e Air Europa volano MAD→PUJ direttamente. Via Madrid si evita completamente il territorio USA. Non serve ESTA.',
-    airlines:'Iberia / Air Europa / Condor',
-    living:{ budget:40, medium:90, luxury:240 },
-    accom:{ hostel:15, budget:50, medium:110, resort:300 },
-    accomNote:'Hostel da €15; hotel Bávaro 3★ da €50-80 (spesso tutto-incluso); resort all-inclusive 5★ da €200-350/notte.',
-    priceRange:{ low:620, high:920 },
-    hackSaving:{ low:80, high:200 },
-  },
-  // ── ASIA (agosto: poche OK) ──
-  {
-    id:'bali', name:'Bali (Ubud + Seminyak)', country:'Indonesia', flag:'🇮🇩',
-    region:'Asia Sud-Est', iata:'DPS', kiwiSlug:'denpasar-bali-indonesia',
-    weather:'green', wxText:'Luglio-agosto: stagione SECCA a Bali — il momento migliore dell\'anno. Caldo (30°C) ma pochissima pioggia.',
-    visaTransitIssue: false,
-    hub:'FRA', hubName:'Francoforte', hubAlt:'DOH',
-    hubReason:'Singapore Airlines via SIN, Lufthansa via FRA→SIN, Qatar via DOH. Nessun visto USA in transito. Visa on arrival per Bali gratuita per italiani (30gg).',
-    airlines:'Singapore Airlines / Lufthansa / Qatar Airways / Emirates',
-    living:{ budget:30, medium:75, luxury:230 },
-    accom:{ hostel:8, budget:25, medium:70, resort:250 },
-    accomNote:'Hostel Canggu/Seminyak da €8-15; villa privata con piscina da €40-80; boutique resort da €150. Bali è imbattibile come rapporto qualità/prezzo.',
-    priceRange:{ low:680, high:980 },
-    hackSaving:{ low:90, high:240 },
-  },
-  {
-    id:'palawan', name:'Palawan / El Nido', country:'Filippine', flag:'🇵🇭',
-    region:'Asia Sud-Est', iata:'PPS', kiwiSlug:'puerto-princesa-philippines',
-    weather:'green', wxText:'Agosto: stagione SECCA su Palawan (costa ovest) — una delle poche mete asiatiche perfette in agosto.',
-    visaTransitIssue: false,
-    hub:'DOH', hubName:'Doha', hubAlt:'DXB',
-    hubReason:'Qatar Airways via Doha o Emirates via Dubai, poi coincidenza Manila (MNL) → Puerto Princesa (PPS). Zero ESTA. Visto per Filippine gratuito per italiani (30gg all\'arrivo).',
-    airlines:'Qatar Airways / Emirates / Philippine Airlines',
-    living:{ budget:28, medium:65, luxury:190 },
-    accom:{ hostel:8, budget:25, medium:65, resort:200 },
-    accomNote:'Hostel da €8; cottages El Nido da €25-60; resort fronte laguna da €120-200. El Nido è più cara di Palawan media.',
-    priceRange:{ low:750, high:1100 },
-    hackSaving:{ low:100, high:270 },
-  },
-  {
-    id:'thailand_krabi', name:'Krabi / Koh Lanta', country:'Thailandia', flag:'🇹🇭',
-    region:'Asia Sud-Est', iata:'KBV', kiwiSlug:'krabi-thailand',
-    weather:'red', wxText:'Agosto: monsone del sud-ovest attivo sulla costa di Krabi e Koh Lanta — mare spesso mosso e agitato. Sconsigliato per beach holiday.',
-    visaTransitIssue: false,
-    hub:'FRA', hubName:'Francoforte', hubAlt:'IST',
-    hubReason:'Turkish Airlines via IST o Lufthansa via FRA. Via hub europei, nessun ESTA. Ma il meteo in agosto è critico per questa zona.',
-    airlines:'Turkish Airlines / Thai Airways / Lufthansa',
-    living:{ budget:28, medium:65, luxury:190 },
-    accom:{ hostel:6, budget:20, medium:60, resort:180 },
-    accomNote:'Hostel da €6; bungalow da spiaggia da €20-40; resort 4★ da €80-150. Thailandia economicissima — peccato per il meteo.',
-    priceRange:{ low:580, high:850 },
-    hackSaving:{ low:80, high:200 },
-  },
-  {
-    id:'srilanka', name:'Sri Lanka', country:'Sri Lanka', flag:'🇱🇰',
-    region:'Oceano Indiano / Asia', iata:'CMB', kiwiSlug:'colombo-sri-lanka',
-    weather:'red', wxText:'Agosto: monsone attivo sia sulla costa ovest che sulla costa est — sconsigliato per spiagge. Meglio novembre-aprile.',
-    visaTransitIssue: false,
-    hub:'FRA', hubName:'Francoforte', hubAlt:'DXB',
-    hubReason:'SriLankan Airlines via CMB, Emirates via DXB, Lufthansa via FRA. Nessun ESTA. ETA online ~€20. Ma il meteo in agosto è problematico.',
-    airlines:'SriLankan Airlines / Emirates / Lufthansa',
-    living:{ budget:22, medium:52, luxury:145 },
-    accom:{ hostel:6, budget:18, medium:50, resort:150 },
-    accomNote:'Hostel da €6; guesthouse da €18-40; boutique hotel da €60-120. Sri Lanka è tra le mete più economiche dell\'Oceano Indiano.',
-    priceRange:{ low:500, high:750 },
-    hackSaving:{ low:60, high:160 },
-  },
-];
-
-// ═══════════════════════════════════════════════════════
-// DATABASE AEROPORTI PER DESTINAZIONE
-// Per ogni meta: lista aeroporti con spiegazione pratica
-// ═══════════════════════════════════════════════════════
-
-const DEST_AIRPORTS = {
-
-  maldives: {
-    intro: 'Le Maldive hanno un solo aeroporto internazionale. Il resort di destinazione si raggiunge poi in idrovolante (15–45 min) o motoscafo (20 min–2h) a seconda dell\'atollo — il transfer è quasi sempre incluso nel pacchetto resort.',
-    airports: [
-      { iata:'MLE', name:'Aeroporto Internazionale Velana — Malé', best:true,
-        desc:'L\'unico hub internazionale delle Maldive. Tutti i voli intercontinentali atterrano qui. Dal terminal si prende l\'idrovolante o il motoscafo verso il proprio resort.',
-        note:'Il terminal idrovolanti è separato da quello principale. Se il tuo atollo è a Sud (Addu, Laamu) valuta un volo domestico interno da MLE.' },
-      { iata:'GAN', name:'Aeroporto di Addu (Seenu)', best:false,
-        desc:'Aeroporto dell\'Atollo di Addu, il più meridionale. Solo voli domestici da MLE. Utile per i resort del Sud come Maldives Equatorial.',
-        note:'Non ha voli internazionali diretti — scalo obbligatorio a MLE.' },
-    ]
-  },
-
-  seychelles: {
-    intro: 'Le Seychelles hanno due aeroporti principali sulle isole più visitate. La scelta dipende da dove vuoi soggiornare: Mahé (isola principale) o Praslin (isola più tranquilla con le famose spiagge di Anse Lazio).',
-    airports: [
-      { iata:'SEZ', name:'Aeroporto Internazionale di Mahé', best:true,
-        desc:'L\'unico aeroporto internazionale delle Seychelles, sull\'isola principale Mahé. Tutti i voli dall\'Europa atterrano qui. Da Mahé si prendono traghetti o voli interni per Praslin e La Digue.',
-        note:'Mahé → Praslin in traghetto: ~1h (€25 circa). Mahé → Praslin in aereo Air Seychelles: 15 min (~€60). La Digue non ha aeroporto: si arriva in traghetto da Praslin (15 min).' },
-      { iata:'PRI', name:'Aeroporto di Praslin', best:false,
-        desc:'Piccolo aeroporto domestico su Praslin, la seconda isola più grande. Raggiungibile solo con voli interni da SEZ (Air Seychelles, 15 min). Comodo se vuoi dormire direttamente a Praslin o La Digue.',
-        note:'Nessun volo internazionale diretto. Se il tuo albergo è a Praslin o La Digue, considera di atterrare a SEZ e prendere subito il traghetto.' },
-    ]
-  },
-
-  mauritius: {
-    intro: 'Mauritius ha un solo aeroporto internazionale. L\'isola è piccola (65x45 km) e si gira facilmente in auto — il punto in cui atterri non cambia molto la logistica.',
-    airports: [
-      { iata:'MRU', name:'Aeroporto Internazionale Sir Seewoosagur Ramgoolam', best:true,
-        desc:'L\'unico aeroporto internazionale di Mauritius, nel sud-est dell\'isola. Tutti i voli dall\'Europa arrivano qui. Taxi/bus per le principali zone turistiche (Grand Baie, Trou aux Biches) ~45-60 min.',
-        note:'Il nord dell\'isola (Grand Baie) è la zona più turistica e la più lontana dall\'aeroporto (~1h). Il sud-est (Blue Bay) è a 15 min.' },
-    ]
-  },
-
-  reunion: {
-    intro: 'Réunion ha due aeroporti ma solo uno riceve voli internazionali. L\'isola è montuosa — considera che spostarsi da un lato all\'altro può richiedere 1-2h per via delle strade tortuose.',
-    airports: [
-      { iata:'RUN', name:'Aeroporto Roland Garros — Saint-Denis', best:true,
-        desc:'L\'unico aeroporto internazionale di Réunion, nel nord dell\'isola vicino alla capitale Saint-Denis. Tutti i voli da Air France e Air Austral atterrano qui.',
-        note:'Per le spiagge del sud (Saint-Leu, Étang-Salé) calcola ~1h-1h30 di auto. Il vulcano Piton de la Fournaise è a ~2h.' },
-      { iata:'ZSE', name:'Aeroporto di Pierrefonds — Saint-Pierre', best:false,
-        desc:'Piccolo aeroporto nel sud dell\'isola. Solo voli domestici e charter da Mayotte. Non utilizzabile per voli dall\'Italia.',
-        note:'Non ha connessioni internazionali regolari. Ignorarlo per voli dall\'Europa.' },
-    ]
-  },
-
-  zanzibar: {
-    intro: 'Zanzibar è un arcipelago con più isole. Zanzibar City (Stone Town) è il centro culturale, ma le spiagge migliori sono sul lato nord (Nungwi, Kendwa) e nord-est (Matemwe). L\'aeroporto principale gestisce tutti i voli internazionali.',
-    airports: [
-      { iata:'ZNZ', name:'Aeroporto Internazionale di Abeid Amani Karume — Zanzibar', best:true,
-        desc:'L\'unico aeroporto internazionale dell\'arcipelago, a pochi km da Stone Town. Ethiopian, Turkish e Kenya Airways atterrano qui. Per le spiagge del nord (Nungwi) ci vogliono 1h-1h30 di taxi.',
-        note:'Taxi aeroporto → Nungwi: ~€30-40. Taxi → Stone Town: ~€10. Considera un transfer organizzato dall\'hotel soprattutto di notte.' },
-      { iata:'DAR', name:'Aeroporto Internazionale Julius Nyerere — Dar es Salaam', best:false,
-        desc:'Il principale aeroporto della Tanzania continentale. Non è a Zanzibar ma è un\'alternativa se voli verso Zanzibar via Tanzania: da DAR si prende il traghetto (2h, ~$35) o un volo locale (20 min, ~$60-80).',
-        note:'Alcune compagnie (es. Ethiopian) fanno scalo a DAR prima di ZNZ. Controlla il tuo itinerario.' },
-    ]
-  },
-
-  kenya_coast: {
-    intro: 'La costa keniota ha più aeroporti. Mombasa è il gateway principale per Malindi e Watamu, ma alcune zone richiedono ulteriori trasferimenti. Nairobi (NBO) è lo scalo intercontinentale principale.',
-    airports: [
-      { iata:'MBA', name:'Aeroporto Internazionale Moi — Mombasa', best:true,
-        desc:'Il principale aeroporto della costa keniota. Voli da European hubs via Nairobi (NBO) o direttamente con Kenya Airways. Ideale per Diani Beach (30 min a sud) e punto di partenza per Watamu/Malindi.',
-        note:'Watamu è a ~2h a nord di Mombasa in taxi. Malindi a ~2h30. Considera di volare Mombasa → Malindi in aereo interno (45 min, ~$80-100 con Fly540 o Kenya Airways).' },
-      { iata:'MYD', name:'Aeroporto di Malindi', best:false,
-        desc:'Piccolo aeroporto a Malindi, ottimo punto di accesso diretto per Watamu (30 min) e le spiagge circostanti. Solo voli domestici da Nairobi (NBO) o Mombasa (MBA) con Kenya Airways o Fly540.',
-        note:'Volo NBO→MYD: ~45 min, ~$80-120. Molto comodo se il tuo resort è a Watamu o Malindi.' },
-      { iata:'NBO', name:'Aeroporto Internazionale Jomo Kenyatta — Nairobi', best:false,
-        desc:'Il principale hub intercontinentale del Kenya, scalo obbligatorio per la maggior parte dei voli internazionali. Non è sulla costa ma quasi tutti i voli dall\'Europa transitano qui.',
-        note:'Da Nairobi a Mombasa: volo interno Kenya Airways ~50 min (~$60-80), o bus overnight (9h). Non andare in bus in agosto se hai poco tempo.' },
-    ]
-  },
-
-  cabo_verde: {
-    intro: 'Capo Verde è un arcipelago di 10 isole. Le tre isole più turistiche per il mare sono Sal (spiagge da sogno, vento per kitesurf), Boa Vista (più selvaggia, tartarughe) e Santiago (culturale, meno balneare). Ogni isola ha il suo aeroporto.',
-    airports: [
-      { iata:'SID', name:'Aeroporto Internazionale Amilcar Cabral — Sal', best:true,
-        desc:'Il principale aeroporto internazionale di Capo Verde. Riceve la maggior parte dei voli charter e di linea dall\'Europa (TAP, TUI, Binter). Sal è l\'isola più sviluppata per il turismo balneare, famosa per Santa Maria e il kitesurf.',
-        note:'Le spiagge di Sal (Santa Maria) sono a 15 min dall\'aeroporto. Vento garantito quasi tutto l\'anno — perfetto per kite e windsurf. Mare più mosso rispetto a Boa Vista.' },
-      { iata:'BVC', name:'Aeroporto di Rabil — Boa Vista', best:false,
-        desc:'L\'aeroporto di Boa Vista, la seconda isola turistica. Anche qui voli charter dall\'Europa in alta stagione (TUI, TAP). Boa Vista è più selvaggia e tranquilla di Sal, con dune di sabbia e nidificazione delle tartarughe (luglio-ottobre).',
-        note:'Ottima alternativa a Sal se cerchi meno folla. Mare mediamente più calmo. Connessioni tra le isole via TACV (~30 min di volo).' },
-      { iata:'RAI', name:'Aeroporto Internazionale Nelson Mandela — Santiago (Praia)', best:false,
-        desc:'L\'aeroporto principale di Santiago, l\'isola più grande e la capitale Praia. Più culturale e storica che balneare — la zona di Tarrafal ha belle spiagge ma l\'isola nel complesso è meno indicata per il mare rispetto a Sal/Boa Vista.',
-        note:'Buon punto di partenza per chi vuole un viaggio misto cultura + spiaggia. Connessioni interne TACV tra tutte le isole.' },
-    ]
-  },
-
-  aruba: {
-    intro: 'Aruba ha un unico aeroporto internazionale. L\'isola è piccola (33x9 km) e si gira tutta in 30 minuti — la posizione dell\'aeroporto non è rilevante. La zona principale turistica è Palm Beach e Eagle Beach.',
-    airports: [
-      { iata:'AUA', name:'Aeroporto Internazionale Queen Beatrix — Aruba', best:true,
-        desc:'L\'unico aeroporto dell\'isola. KLM da Amsterdam e Air Europa/Iberia da Madrid atterrano qui senza mai toccare suolo americano. Nessun ESTA richiesto. Il resort district di Palm Beach è a 10 min dall\'aeroporto.',
-        note:'Attenzione: alcuni voli da hub europei fanno scalo a Curaçao (CUR) prima di AUA — è normale e non richiede visto extra. Il solo territorio USA è quello che richiede ESTA.' },
-    ]
-  },
-
-  curacao: {
-    intro: 'Curaçao ha un unico aeroporto internazionale. L\'isola è piuttosto compatta. La capitale Willemstad (Patrimonio UNESCO) è a 15 min, le spiagge migliori (Cas Abao, Grote Knip) sono a 30-45 min.',
-    airports: [
-      { iata:'CUR', name:'Aeroporto Internazionale Hato — Willemstad', best:true,
-        desc:'L\'unico aeroporto di Curaçao. KLM vola diretto da Amsterdam più volte a settimana. Nessun transito USA, nessun ESTA. Ottimo punto di partenza anche per Aruba e Bonaire (isole ABC).',
-        note:'Curaçao, Aruba e Bonaire formano le "isole ABC" degli Antille olandesi — valuta un island-hopping se hai 2+ settimane. Voli interni EZAir o Divi Divi Air tra le isole ABC (~20 min).' },
-    ]
-  },
-
-  colombia_ctg: {
-    intro: 'Per Cartagena de Indias c\'è un aeroporto dedicato. Se vuoi esplorare anche altre zone della Colombia (Bogotà, Medellín, isole del Rosario), considera eventuali voli interni — economici e frequenti.',
-    airports: [
-      { iata:'CTG', name:'Aeroporto Internazionale Rafael Núñez — Cartagena', best:true,
-        desc:'L\'aeroporto di Cartagena, nel nord della Colombia sul Mar dei Caraibi. Iberia e Avianca collegano Madrid→CTG direttamente. A 10 min dall\'aeroporto si trova il centro storico murato di Cartagena (Patrimonio UNESCO).',
-        note:'Il centro storico è a 10-15 min in taxi (~$8-12). Getsemaní e La Bocagrande sono i quartieri più turistici. Isole del Rosario (spiagge) si raggiungono in barca da Cartagena (~45 min).' },
-      { iata:'BOG', name:'Aeroporto Internazionale El Dorado — Bogotà', best:false,
-        desc:'Il principale hub intercontinentale della Colombia. Alcuni voli da Madrid o da hub europei atterrano prima a BOG e poi si prosegue su CTG con volo interno (~1h, $50-80 con Avianca o LATAM).',
-        note:'Se il tuo volo arriva a Bogotà, aggiungi un volo interno per Cartagena. Bogotà stessa vale una visita ma non è una meta balneare.' },
-    ]
-  },
-
-  dr_puntacana: {
-    intro: 'La Repubblica Dominicana ha più aeroporti. La scelta dipende dalla zona: Punta Cana è il resort district per eccellenza, Santo Domingo è la capitale con storia coloniale, Puerto Plata è il nord con Cabarete (kitesurf).',
-    airports: [
-      { iata:'PUJ', name:'Aeroporto Internazionale di Punta Cana', best:true,
-        desc:'Il più trafficato della Rep. Dominicana e tra i più trafficati dei Caraibi. Hub dei grandi resort all-inclusive (Bávaro, Punta Cana). Iberia e Air Europa volano da MAD direttamente, senza transit USA.',
-        note:'I resort di Bávaro sono a 20-30 min dall\'aeroporto. Cana Bay e Cap Cana a 15 min. Attenzione: agosto è nella stagione degli uragani — monitora le previsioni prima di partire.' },
-      { iata:'SDQ', name:'Aeroporto Internazionale Las Américas — Santo Domingo', best:false,
-        desc:'L\'aeroporto della capitale, ideale per chi vuole visitare la Ciudad Colonial (Patrimonio UNESCO) o esplorare il paese partendo da un centro urbano.',
-        note:'Non è sul mare — Santo Domingo è una città costiera ma non ha spiagge urbane di qualità. Per le spiagge bisogna spostarsi (Juan Dolio ~30 min, Punta Cana ~2h30).' },
-      { iata:'POP', name:'Aeroporto Internazionale Gregorio Luperón — Puerto Plata', best:false,
-        desc:'Il gateway per il nord della Rep. Dominicana. Ideale per Cabarete (kitesurf mondiale) e Playa Dorada. Voli charter da Europa in alta stagione.',
-        note:'Cabarete a 20 min. Sosúa a 15 min. Meno resort all-inclusive rispetto a Punta Cana — atmosfera più autentica.' },
-    ]
-  },
-
-  bali: {
-    intro: 'Bali ha un solo aeroporto internazionale ma è circondata da isole accessibili via traghetto (Lombok, Gili, Nusa Penida, Nusa Lembongan). La zona in cui stai a Bali cambia completamente l\'esperienza: Seminyak/Kuta per la vita notturna, Ubud per la cultura, Canggu per i surfer, Amed/Candidasa per i subacquei.',
-    airports: [
-      { iata:'DPS', name:'Aeroporto Internazionale Ngurah Rai — Denpasar (Bali)', best:true,
-        desc:'L\'unico aeroporto internazionale di Bali e di tutta la provincia. Tutti i voli intercontinentali atterrano qui. In agosto è nella stagione SECCA — il miglior periodo dell\'anno. Visa on arrival gratuita per italiani (30gg, prorogabile).',
-        note:'Il traffico a Bali può essere intenso: Seminyak/Kuta a 15 min, Ubud 1h-1h30, Amed 2h30. Il Grab (Uber locale) funziona bene e costa pochissimo. Per Nusa Penida: traghetto veloce da Sanur (~30 min, €5).' },
-      { iata:'LOP', name:'Aeroporto Internazionale Zainuddin Abdul Madjid — Lombok', best:false,
-        desc:'L\'aeroporto di Lombok, l\'isola confinante con Bali. Più tranquilla e meno turistica. Ideale per chi vuole le isole Gili (Gili Trawangan, Gili Air) o il trekking sul Rinjani.',
-        note:'Da DPS (Bali) a Lombok: volo interno ~30 min (~$30-50 con Wings Air/Garuda) o traghetto veloce ~2h (~€15). Le Gili si raggiungono in scialuppa da Lombok (~20-45 min).' },
-      { iata:'SUB', name:'Aeroporto Internazionale Juanda — Surabaya (Giava)', best:false,
-        desc:'L\'aeroporto di Surabaya, in Giava Orientale. Non è a Bali, ma è un punto di transito per chi fa un itinerario Indonesia più esteso (Bromo, Giava → Bali). Alcuni voli low-cost asiatici passano da qui.',
-        note:'Da SUB a Bali: volo interno ~55 min o traghetto notturno ~10h. Nessun motivo di atterrare qui se la destinazione finale è Bali.' },
-    ]
-  },
-
-  palawan: {
-    intro: 'Palawan è una delle province più belle delle Filippine, lunga e sottile. El Nido (nord) e Coron (nord-ovest) sono le zone più iconiche per snorkeling e island-hopping. Puerto Princesa è il capoluogo al centro dell\'isola. Ogni zona ha il suo aeroporto e richiede pianificazione.',
-    airports: [
-      { iata:'PPS', name:'Aeroporto Internazionale Puerto Princesa', best:true,
-        desc:'Il principale aeroporto internazionale di Palawan, al centro dell\'isola. Voli da Manila (MNL) con Philippine Airlines, Cebu Pacific (~1h, $30-60). Da Puerto Princesa si va a El Nido in van (~5-6h) o volo interno (~45 min con Air Juan).',
-        note:'Puerto Princesa → El Nido in van: ~€10-15, comodo ma lungo. Volo interno Air Juan/PAL Express: ~€60-80, consigliato se hai poco tempo. Il Parco Nazionale del Fiume Sotterraneo è a 2h da PP.' },
-      { iata:'ENI', name:'Aeroporto di El Nido', best:false,
-        desc:'Piccolo aeroporto direttamente a El Nido — la soluzione migliore se vuoi arrivare subito nella zona più bella di Palawan. Voli da Manila con Air Juan o SkyJet (~1h15, $60-100).',
-        note:'Fortemente consigliato rispetto al van da Puerto Princesa se il budget lo permette. El Nido ha le lagune più famose e l\'island-hopping più bello delle Filippine.' },
-      { iata:'USU', name:'Aeroporto Francisco B. Reyes — Coron', best:false,
-        desc:'L\'aeroporto di Coron, nell\'isola di Busuanga nel nord-ovest di Palawan. Famosa per i relitti della Seconda Guerra Mondiale (diving) e i laghi interni. Voli da Manila con Cebu Pacific/PAL Express (~1h, $40-70).',
-        note:'Coron e El Nido sono collegati da barca veloce (4-5h, ~€30) o volo interno (~30 min). Valuta un itinerario Coron → El Nido o viceversa.' },
-      { iata:'MNL', name:'Aeroporto Internazionale Ninoy Aquino — Manila', best:false,
-        desc:'Il principale hub internazionale delle Filippine. Tutti i voli intercontinentali (Qatar, Emirates) atterrano qui. Da Manila si prendono voli interni per Palawan (PPS, ENI, USU) con Cebu Pacific, Philippine Airlines o Air Juan.',
-        note:'Manila non è una meta turistica di per sé — è caotica e molto trafficata. Pianifica un volo interno per Palawan appena atterri. Il terminal domestico (T3) è vicino a quello internazionale (T1/T2).' },
-    ]
-  },
-
-  thailand_krabi: {
-    intro: 'Krabi e le isole circostanti (Koh Lanta, Phi Phi, Koh Ngai) sono raggiungibili dall\'aeroporto di Krabi. In agosto il monsone del sud-ovest colpisce duramente questa zona — mare mosso, traghetti cancellati, spiagge chiuse. Valuta la Costa Est (Koh Samui, Koh Phangan) che ha il suo regime di piogge diverso, ma anche lì agosto non è il top.',
-    airports: [
-      { iata:'KBV', name:'Aeroporto di Krabi', best:true,
-        desc:'L\'aeroporto principale per la zona di Krabi, Ao Nang e le isole. In agosto è stagione dei monsoni del sud-ovest — voli operano ma il mare è molto mosso e molti traghetti per le isole vengono sospesi.',
-        note:'Ao Nang a 30 min. Traghetto per Koh Lanta ~1h30. Traghetto per Phi Phi ~45 min. In agosto: aspettati cancellazioni frequenti dei traghetti e spiagge poco accessibili.' },
-      { iata:'HKT', name:'Aeroporto Internazionale di Phuket', best:false,
-        desc:'Il principale hub di quella zona della Tailandia, con più voli internazionali rispetto a KBV. Stesso problema di monsoni in agosto. Phuket ha servizi migliori ma mare altrettanto mosso.',
-        note:'Da Phuket a Krabi via bus/traghetto: ~3h. In agosto entrambe le destinazioni soffrono di monsoni — considera destinazioni alternative come Koh Samui (costa est).' },
-      { iata:'USM', name:'Aeroporto di Koh Samui', best:false,
-        desc:'L\'aeroporto sull\'isola di Koh Samui, sulla costa est del Golfo di Tailandia. Ha un regime di piogge DIVERSO da Krabi — in agosto la costa est è tendenzialmente più secca, ma non sempre garantita.',
-        note:'Voli diretti da Bangkok (BKK/DMK) con Bangkok Airways. Koh Samui → Koh Phangan in traghetto: 30 min. Agosto sulla costa est è più accettabile ma non al top — stagione delle piogge qui è ottobre-dicembre.' },
-    ]
-  },
-
-  srilanka: {
-    intro: 'Lo Sri Lanka ha più aeroporti ma uno solo internazionale di fatto. In agosto il monsone colpisce sia la costa ovest (Colombo, Negombo) che la costa est (Trincomalee, Arugam Bay). Non è il mese ideale per lo Sri Lanka.',
-    airports: [
-      { iata:'CMB', name:'Aeroporto Internazionale Bandaranaike — Colombo (Katunayake)', best:true,
-        desc:'L\'unico aeroporto internazionale praticabile dello Sri Lanka per voli dall\'Europa. A 35 km a nord di Colombo, vicino a Negombo. SriLankan Airlines, Emirates e Qatar operano qui.',
-        note:'In agosto: la costa ovest (Colombo, Negombo, Mirissa) è nel pieno del monsone del sud-ovest. La costa est (Trincomalee, Arugam Bay) è teoricamente nella stagione secca, ma il meteo è imprevedibile. Il Paese merita una visita ma agosto non è il momento migliore.' },
-      { iata:'HRI', name:'Aeroporto Internazionale Mattala Rajapaksa — Hambantota', best:false,
-        desc:'Il controverso "aeroporto fantasma" nel sud dello Sri Lanka — inaugurato con enormi investimenti ma praticamente inutilizzato per voli internazionali regolari. Solo charter occasionali.',
-        note:'Non considerarlo per voli regolari dall\'Europa. Esiste solo sulla carta per la maggior parte delle compagnie aeree.' },
-    ]
-  },
-
-};
-
-// ── AIRPORT SEARCH ──
+// ── AIRPORTS ──
 const ALL_AIRPORTS = [
-  { code:'MXP', name:'Milano Malpensa', city:'Milano', country:'Italia' },
-  { code:'LIN', name:'Milano Linate', city:'Milano', country:'Italia' },
-  { code:'BGY', name:'Bergamo Orio al Serio', city:'Bergamo', country:'Italia' },
-  { code:'FCO', name:'Roma Fiumicino', city:'Roma', country:'Italia' },
-  { code:'CIA', name:'Roma Ciampino', city:'Roma', country:'Italia' },
-  { code:'VCE', name:'Venezia Marco Polo', city:'Venezia', country:'Italia' },
-  { code:'BLQ', name:'Bologna Guglielmo Marconi', city:'Bologna', country:'Italia' },
-  { code:'NAP', name:'Napoli Capodichino', city:'Napoli', country:'Italia' },
-  { code:'PMO', name:'Palermo Falcone Borsellino', city:'Palermo', country:'Italia' },
-  { code:'TRN', name:'Torino Caselle', city:'Torino', country:'Italia' },
-  { code:'FLR', name:'Firenze Peretola', city:'Firenze', country:'Italia' },
-  { code:'PSA', name:'Pisa Galileo Galilei', city:'Pisa', country:'Italia' },
-  { code:'BRI', name:'Bari Palese', city:'Bari', country:'Italia' },
-  { code:'CTA', name:'Catania Fontanarossa', city:'Catania', country:'Italia' },
-  { code:'GOA', name:'Genova Cristoforo Colombo', city:'Genova', country:'Italia' },
-  { code:'VRN', name:'Verona Villafranca', city:'Verona', country:'Italia' },
-  { code:'TSF', name:'Treviso Sant\'Angelo', city:'Treviso', country:'Italia' },
-  { code:'AOI', name:'Ancona Falconara', city:'Ancona', country:'Italia' },
-  { code:'SUF', name:'Lamezia Terme', city:'Lamezia Terme', country:'Italia' },
+  {code:'MXP',name:'Milano Malpensa',city:'Milano',country:'Italia'},
+  {code:'LIN',name:'Milano Linate',city:'Milano',country:'Italia'},
+  {code:'BGY',name:'Bergamo Orio al Serio',city:'Bergamo',country:'Italia'},
+  {code:'FCO',name:'Roma Fiumicino',city:'Roma',country:'Italia'},
+  {code:'CIA',name:'Roma Ciampino',city:'Roma',country:'Italia'},
+  {code:'VCE',name:'Venezia Marco Polo',city:'Venezia',country:'Italia'},
+  {code:'BLQ',name:'Bologna Guglielmo Marconi',city:'Bologna',country:'Italia'},
+  {code:'NAP',name:'Napoli Capodichino',city:'Napoli',country:'Italia'},
+  {code:'PMO',name:'Palermo Falcone Borsellino',city:'Palermo',country:'Italia'},
+  {code:'TRN',name:'Torino Caselle',city:'Torino',country:'Italia'},
+  {code:'FLR',name:'Firenze Peretola',city:'Firenze',country:'Italia'},
+  {code:'PSA',name:'Pisa Galileo Galilei',city:'Pisa',country:'Italia'},
+  {code:'BRI',name:'Bari Palese',city:'Bari',country:'Italia'},
+  {code:'CTA',name:'Catania Fontanarossa',city:'Catania',country:'Italia'},
+  {code:'GOA',name:'Genova Cristoforo Colombo',city:'Genova',country:'Italia'},
+  {code:'VRN',name:'Verona Villafranca',city:'Verona',country:'Italia'},
+  {code:'TSF',name:"Treviso Sant'Angelo",city:'Treviso',country:'Italia'},
+  {code:'SUF',name:'Lamezia Terme',city:'Lamezia Terme',country:'Italia'},
 ];
 
-let dropdownVisible = false;
+const AIRPORTS = {};
+ALL_AIRPORTS.forEach(a => { AIRPORTS[a.code] = {name:a.name, city:a.city}; });
 
 function filterAirports() {
   const q = document.getElementById('airportSearch').value.toLowerCase().trim();
   const dd = document.getElementById('airportDropdown');
-  if (!q) { dd.style.display = 'none'; return; }
-
+  if (!q) { dd.style.display='none'; return; }
   const matches = ALL_AIRPORTS.filter(a =>
-    a.code.toLowerCase().includes(q) ||
-    a.name.toLowerCase().includes(q) ||
-    a.city.toLowerCase().includes(q)
-  ).slice(0, 8);
-
-  if (!matches.length) { dd.style.display = 'none'; return; }
-
+    a.code.toLowerCase().includes(q) || a.name.toLowerCase().includes(q) || a.city.toLowerCase().includes(q)
+  ).slice(0,8);
+  if (!matches.length) { dd.style.display='none'; return; }
   dd.innerHTML = matches.map(a => `
     <div class="ap-drop-item" onmousedown="selectAirport('${a.code}','${a.name}')">
       <span class="iata-pill">${a.code}</span>
       <span>${a.name}</span>
       <span class="ap-city">${a.city}</span>
-    </div>
-  `).join('');
-  dd.style.display = 'block';
+    </div>`).join('');
+  dd.style.display='block';
 }
-
 function selectAirport(code, name) {
   document.getElementById('airport').value = code;
   document.getElementById('airportSearch').value = `${name} (${code})`;
-  document.getElementById('airportDropdown').style.display = 'none';
-  // Add to AIRPORTS if not present
-  if (!AIRPORTS[code]) {
-    AIRPORTS[code] = { name, city: name, kiwiSlug: name.toLowerCase().replace(/\s+/g,'-') + '-italy' };
-  }
+  document.getElementById('airportDropdown').style.display='none';
+  if (!AIRPORTS[code]) AIRPORTS[code] = {name, city:name};
 }
+function showDropdown() { if(document.getElementById('airportSearch').value.length>0) filterAirports(); }
+function hideDropdown() { setTimeout(()=>{ document.getElementById('airportDropdown').style.display='none'; },200); }
 
-function showDropdown() {
-  if (document.getElementById('airportSearch').value.length > 0) filterAirports();
-}
-
-function hideDropdown() {
-  setTimeout(() => { document.getElementById('airportDropdown').style.display = 'none'; }, 200);
-}
-
-// Init airport search with default
-window.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('airportSearch').value = 'Milano Malpensa (MXP)';
-});
-const AIRPORTS = {
-  MXP:{ name:'Milano Malpensa', city:'Milan', kiwiSlug:'milan-italy' },
-  LIN:{ name:'Milano Linate', city:'Milan', kiwiSlug:'milan-italy' },
-  BGY:{ name:'Bergamo Orio al Serio', city:'Bergamo', kiwiSlug:'bergamo-italy' },
-  FCO:{ name:'Roma Fiumicino', city:'Rome', kiwiSlug:'rome-italy' },
-  VCE:{ name:'Venezia Marco Polo', city:'Venice', kiwiSlug:'venice-italy' },
-  BLQ:{ name:'Bologna', city:'Bologna', kiwiSlug:'bologna-italy' },
-  NAP:{ name:'Napoli', city:'Naples', kiwiSlug:'naples-italy' },
-  PMO:{ name:'Palermo', city:'Palermo', kiwiSlug:'palermo-italy' },
-  TRN:{ name:'Torino Caselle', city:'Turin', kiwiSlug:'turin-italy' },
-  GRS:{ name:'Grosseto', city:'Grosseto', kiwiSlug:'grosseto-italy' },
-};
-
-const HUB_SLUGS = {
-  FRA:'frankfurt-germany', CDG:'paris-france', MAD:'madrid-spain',
-  LIS:'lisbon-portugal', AMS:'amsterdam-netherlands', LHR:'london-united-kingdom',
-  DOH:'doha-qatar', DXB:'dubai-united-arab-emirates', IST:'istanbul-turkey',
-};
-
-// ── URL BUILDERS ──
-function fmtSkyscanner(date) {
-  // YYMMDD
-  return date.replace(/-/g,'').slice(2);
-}
-
-function buildSkyscanner(from, to, dep, ret) {
-  const d1 = fmtSkyscanner(dep), d2 = fmtSkyscanner(ret);
-  return `https://www.skyscanner.it/trasporti/voli/${from}/${to}/${d1}/${d2}/`;
-}
-
-function buildGoogleFlights(from, to, dep, ret) {
-  return `https://www.google.com/flights#flt=${from}.${to}.${dep}*${to}.${from}.${ret};c:EUR;e:1;sd:1;t:f`;
-}
-
-function buildKiwi(fromSlug, toSlug, dep, ret) {
-  // DD-MM-YYYY
-  const fmtKiwi = d => d.split('-').reverse().join('-');
-  return `https://www.kiwi.com/it/search/results/${fromSlug}/${toSlug}/${fmtKiwi(dep)}/${fmtKiwi(ret)}`;
-}
-
-// For hack: leg1 = italy→hub, leg2 = hub→dest
-function buildKiwiHack(fromSlug, hubSlug, destSlug, dep, ret) {
-  const fmtKiwi = d => d.split('-').reverse().join('-');
-  // Kiwi handles self-connect nicely — search from origin to dest, it will find the cheapest routing
-  return `https://www.kiwi.com/it/search/results/${fromSlug}/${destSlug}/${fmtKiwi(dep)}/${fmtKiwi(ret)}?sortBy=price&flightsOnlyFilterEnabled=true`;
-}
-
-// Leg 1 only (low-cost to hub) — one way
-function buildSkyscannerOW(from, to, dep) {
-  return `https://www.skyscanner.it/trasporti/voli/${from}/${to}/${fmtSkyscanner(dep)}/`;
+// ── THEME ──
+let isDark = false;
+function toggleTheme() {
+  isDark = !isDark;
+  document.documentElement.setAttribute('data-theme', isDark ? '' : 'light');
+  document.getElementById('themeBtn').textContent = isDark ? '☀️ Tema chiaro' : '🌙 Tema scuro';
 }
 
 // ── DATE UTILS ──
-function addDays(d, n) {
-  const dt = new Date(d); dt.setDate(dt.getDate()+n);
-  return dt.toISOString().slice(0,10);
-}
+function addDays(d,n){ const dt=new Date(d); dt.setDate(dt.getDate()+n); return dt.toISOString().slice(0,10); }
+function fmtIta(d){ return new Date(d+'T00:00:00').toLocaleDateString('it-IT',{day:'numeric',month:'short'}); }
+function diffDays(a,b){ return Math.round((new Date(b)-new Date(a))/86400000); }
+function fmtSkyscanner(date){ return date.replace(/-/g,'').slice(2); }
 
-function fmtIta(d) {
-  return new Date(d+'T00:00:00').toLocaleDateString('it-IT',{day:'numeric',month:'short'});
+// ── URL BUILDERS ──
+function buildSkyscanner(from,to,dep,ret){
+  return `https://www.skyscanner.it/transport/flights/${from.toLowerCase()}/${to.toLowerCase()}/${fmtSkyscanner(dep)}/${fmtSkyscanner(ret)}/?adults=1&cabinclass=economy&currency=EUR`;
 }
-
-function diffDays(a,b) {
-  return Math.round((new Date(b)-new Date(a))/86400000);
+function buildGoogleFlights(from,to,dep,ret){
+  return `https://www.google.com/travel/flights?f=d&from=${from}&to=${to}&date=${dep}&return=${ret}&curr=EUR&hl=it`;
+}
+function buildKiwi(from,to,dep,ret){
+  return `https://www.kiwi.com/deep?from=${from}&to=${to}&departure=${dep}&return=${ret}&adults=1&currency=EUR`;
+}
+function buildKiwiHack(from,hub,dest,dep,ret){
+  return `https://www.kiwi.com/deep?from=${from}&to=${dest}&departure=${dep}&return=${ret}&adults=1&currency=EUR&stopover=${hub}`;
+}
+function buildSkyscannerOW(from,to,dep){
+  return `https://www.skyscanner.it/transport/flights/${from.toLowerCase()}/${to.toLowerCase()}/${fmtSkyscanner(dep)}/?adults=1&cabinclass=economy`;
+}
+function buildAppleMaps(name, country){
+  const q = encodeURIComponent(`${name}, ${country}`);
+  return `https://maps.apple.com/?q=${q}`;
 }
 
 // ── FLEX OPTIMIZER ──
-// Returns the best departure offset (within ±flex) based on day-of-week pricing patterns
-// Cheapest days: Tue/Wed for long-haul departures, Sat for returns
 function bestFlexOffset(baseDep, baseRet, flexDays) {
   const base = diffDays(baseDep, baseRet);
   let best = null;
-
-  for(let dD = -flexDays; dD <= flexDays; dD++) {
-    for(let dR = -flexDays; dR <= flexDays; dR++) {
-      const nd = addDays(baseDep, dD);
-      const nr = addDays(baseRet, dR);
-      const dur = diffDays(nd, nr);
-      if(dur < 5 || Math.abs(dur-base) > 2) continue;
-
-      const depDow = new Date(nd+'T00:00:00').getDay(); // 0=sun
-      const retDow = new Date(nr+'T00:00:00').getDay();
-
-      // Cheapest: dep on Tue(2)/Wed(3), ret on Sat(6)/Sun(0)
-      let score = 0;
-      if(depDow===2||depDow===3) score += 2;
-      if(depDow===1||depDow===4) score += 1;
-      if(retDow===6||retDow===0) score += 2;
-      if(retDow===5||retDow===1) score += 1;
-
-      // Penalize week 1 and week 4 (peak August)
-      const dayOfMonth = new Date(nd+'T00:00:00').getDate();
-      if(dayOfMonth >= 7 && dayOfMonth <= 14) score += 1; // mid Aug slightly cheaper
-      if(dayOfMonth >= 1 && dayOfMonth <= 6) score -= 1;   // early Aug expensive
-
-      if(!best || score > best.score) {
-        best = { dD, dR, nd, nr, dur, score };
-      }
+  for(let dD=-flexDays; dD<=flexDays; dD++) {
+    for(let dR=-flexDays; dR<=flexDays; dR++) {
+      const nd=addDays(baseDep,dD), nr=addDays(baseRet,dR);
+      const dur=diffDays(nd,nr);
+      if(dur<5||Math.abs(dur-base)>2) continue;
+      const depDow=new Date(nd+'T00:00:00').getDay(), retDow=new Date(nr+'T00:00:00').getDay();
+      let score=0;
+      if(depDow===2||depDow===3) score+=2;
+      if(depDow===1||depDow===4) score+=1;
+      if(retDow===6||retDow===0) score+=2;
+      if(retDow===5||retDow===1) score+=1;
+      if(!best||score>best.score) best={dD,dR,nd,nr,dur,score};
     }
   }
-
-  return best || { dD:0, dR:0, nd:baseDep, nr:baseRet, dur:base, score:0 };
+  return best||{dD:0,dR:0,nd:baseDep,nr:baseRet,dur:base,score:0};
 }
 
-// ── MAIN COMPUTE ──
-function computeAll(airportCode, depDate, retDate, flexDays, avoidVisa, showHack) {
-  const ap = AIRPORTS[airportCode];
-  const baseDur = diffDays(depDate, retDate);
+// ── AI CALL (Groq) ──
+async function fetchDestinationsFromAI(depDate, retDate, avoidVisa, airportCode) {
+  const depMonth = new Date(depDate+'T00:00:00').toLocaleString('it-IT',{month:'long'});
+  const dur = diffDays(depDate, retDate);
+  const visaNote = avoidVisa ? 'Evitare destinazioni che richiedono scalo obbligatorio negli USA o ESTA in transito.' : '';
 
-  return DESTS.map(dest => {
-    if(avoidVisa && dest.visaTransitIssue) return null;
+  const prompt = `Sei un esperto di viaggi e voli internazionali. L'utente parte dall'aeroporto ${airportCode} (Italia) il ${fmtIta(depDate)} e torna il ${fmtIta(retDate)} (${dur} notti).
+${visaNote}
 
-    const flex = flexDays > 0 ? bestFlexOffset(depDate, retDate, flexDays) : null;
-    const flexDep = flex ? flex.nd : depDate;
-    const flexRet = flex ? flex.nr : retDate;
-    const flexDur = flex ? flex.dur : baseDur;
-    const hasFlex = flex && (flex.dD !== 0 || flex.dR !== 0);
+In base al periodo (${depMonth}), suggerisci esattamente 10 destinazioni di viaggio OTTIMALI per questo periodo. Non limitarti solo alle mete di mare — scegli le destinazioni più adatte al periodo: se è inverno suggerisci città con mercatini di Natale, tour culturali, sci esotico, ecc. Se è primavera/autunno suggerisci mete che in quel periodo sono al meglio. Se è estate suggerisci mare esotico, natura, avventura.
 
-    // Build URLs
-    // Direct search (Skyscanner, Google, Kiwi)
-    const urlSky = buildSkyscanner(airportCode, dest.iata, depDate, retDate);
-    const urlGoog = buildGoogleFlights(airportCode, dest.iata, depDate, retDate);
-    const urlKiwi = buildKiwi(ap.kiwiSlug, dest.kiwiSlug, depDate, retDate);
-
-    // Flex URLs
-    const urlSkyFlex = hasFlex ? buildSkyscanner(airportCode, dest.iata, flexDep, flexRet) : null;
-    const urlGoogFlex = hasFlex ? buildGoogleFlights(airportCode, dest.iata, flexDep, flexRet) : null;
-    const urlKiwiFlex = hasFlex ? buildKiwi(ap.kiwiSlug, dest.kiwiSlug, flexDep, flexRet) : null;
-
-    // Hack URLs (self-connect via hub)
-    let hackData = null;
-    if(showHack) {
-      const hubSlug = HUB_SLUGS[dest.hub] || '';
-      const urlKiwiHack = buildKiwiHack(ap.kiwiSlug, hubSlug, dest.kiwiSlug, depDate, retDate);
-      // Leg 1: from → hub (low cost, one way out, one way back)
-      const urlLeg1Out = buildSkyscannerOW(airportCode, dest.hub, depDate);
-      const urlLeg1Ret = buildSkyscannerOW(dest.hub, airportCode, retDate);
-      // Leg 2: hub → dest RT
-      const urlLeg2 = buildSkyscanner(dest.hub, dest.iata, depDate, retDate);
-      const urlLeg2Goog = buildGoogleFlights(dest.hub, dest.iata, depDate, retDate);
-
-      hackData = {
-        hub: dest.hub, hubName: dest.hubName, hubAlt: dest.hubAlt,
-        hubReason: dest.hubReason, airlines: dest.airlines,
-        saving: dest.hackSaving,
-        urlKiwiHack, urlLeg1Out, urlLeg1Ret, urlLeg2, urlLeg2Goog,
-      };
-    }
-
-    return {
-      dest, ap, airportCode, baseDur, flexDur,
-      depDate, retDate, flexDep, flexRet,
-      hasFlex, flex,
-      urls:{ urlSky, urlGoog, urlKiwi },
-      flexUrls: hasFlex ? { urlSkyFlex, urlGoogFlex, urlKiwiFlex } : null,
-      hackData,
-    };
-  }).filter(Boolean);
-}
-
-// ── AIRPORT PANEL RENDERER ──
-function renderAirportPanel(destId) {
-  const data = DEST_AIRPORTS[destId];
-  if (!data) return '';
-
-  const apItems = data.airports.map(ap => `
-    <div class="ap-item${ap.best ? ' best' : ''}">
-      <div class="ap-iata">${ap.iata}</div>
-      <div class="ap-info">
-        <div class="ap-name">
-          ${ap.name}
-          ${ap.best ? '<span class="best-badge">✓ Consigliato</span>' : ''}
-        </div>
-        <div class="ap-desc">${ap.desc}</div>
-        ${ap.note ? `<div class="ap-note">ℹ ${ap.note}</div>` : ''}
-      </div>
-    </div>
-  `).join('');
-
-  const panelId = `ap-${destId}`;
-  return `
-    <div class="ap-panel">
-      <div class="ap-toggle" id="tog-${panelId}" onclick="toggleAp('${panelId}')">
-        <span>🛬 Aeroporti e dove atterrare (${data.airports.length} opzioni)</span>
-        <span class="ap-chevron">▼</span>
-      </div>
-      <div class="ap-body" id="${panelId}">
-        <div class="ap-intro">${data.intro}</div>
-        <div class="ap-list">${apItems}</div>
-      </div>
-    </div>
-  `;
-}
-
-function toggleAp(id) {
-  const body = document.getElementById(id);
-  const tog = document.getElementById('tog-' + id);
-  const isOpen = body.classList.contains('open');
-  body.classList.toggle('open', !isOpen);
-  tog.classList.toggle('open', !isOpen);
-}
-
-// ── RENDER ──
-let lastAll = [];
-
-function renderAll(all, hideRed) {
-  const container = document.getElementById('resultsContainer');
-  const meteoNotice = document.getElementById('meteoNotice');
-  const empty = document.getElementById('empty');
-  container.innerHTML = '';
-
-  const visible = hideRed ? all.filter(r => r.dest.weather !== 'red') : all;
-  const hiddenCount = all.filter(r => r.dest.weather === 'red').length;
-
-  if(hideRed && hiddenCount > 0) {
-    meteoNotice.classList.add('on');
-    document.getElementById('meteoCount').textContent = hiddenCount;
-  } else {
-    meteoNotice.classList.remove('on');
+Per ogni destinazione fornisci un JSON con ESATTAMENTE questa struttura (array di 10 oggetti):
+[
+  {
+    "id": "slug-unico",
+    "name": "Nome Destinazione",
+    "country": "Paese",
+    "flag": "🏳️",
+    "region": "Regione geografica",
+    "iata": "CODICE_IATA",
+    "category": "mare|città|natura|avventura|cultura|sci",
+    "weather": "green|yellow|red",
+    "wxText": "Condizioni meteo specifiche per ${depMonth}",
+    "whyNow": "Perché questa destinazione è perfetta PROPRIO in ${depMonth}",
+    "hub": "IATA_HUB_EUROPEO",
+    "hubName": "Nome hub europeo",
+    "hubReason": "Perché questo hub è ottimale (senza ESTA, compagnia diretta, ecc.)",
+    "airlines": "Compagnia1 / Compagnia2",
+    "living": { "budget": 30, "medium": 70, "luxury": 200 },
+    "accom": { "hostel": 15, "budget": 45, "medium": 100, "resort": 280 },
+    "accomNote": "Nota pratica sugli alloggi",
+    "priceRange": { "low": 450, "high": 750 },
+    "hackSaving": { "low": 80, "high": 200 },
+    "airports": [
+      { "iata": "IATA", "name": "Nome aeroporto", "best": true, "desc": "Descrizione pratica", "note": "Nota opzionale" }
+    ]
   }
+]
 
-  if(visible.length === 0) {
-    empty.classList.add('on'); return;
-  }
-  empty.classList.remove('on');
+Rispondi SOLO con il JSON puro, senza testo aggiuntivo, senza markdown, senza backtick.`;
 
-  // results header
-  const rh = document.createElement('div');
-  rh.className = 'rh';
-  rh.innerHTML = `
-    <div>
-      <div class="rh-title">${visible.length} destinazioni trovate</div>
-      <div class="rh-sub">Clicca "Cerca ora" per aprire la ricerca reale già precompilata</div>
-    </div>
-    <div class="sort-bar">
-      <button class="sort-btn active" onclick="doSort('name',this)">A–Z</button>
-      <button class="sort-btn" onclick="doSort('saving',this)">Risparmio hack</button>
-      <button class="sort-btn" onclick="doSort('living',this)">Costo vita</button>
-    </div>
-  `;
-  container.appendChild(rh);
-
-  visible.forEach((r, i) => {
-    const block = document.createElement('div');
-    block.className = 'dest-block';
-    block.style.animationDelay = `${i * 0.07}s`;
-
-    const wxIco = { green:'☀️', yellow:'⛅', red:'🌧️' }[r.dest.weather];
-    const wxLabel = { green:'Clima ottimo', yellow:'Attenzione piogge', red:'Monsoni/Uragani' }[r.dest.weather];
-
-    // Build flex label
-    let flexLabel = '';
-    if(r.hasFlex) {
-      const parts = [];
-      if(r.flex.dD < 0) parts.push(`parti ${Math.abs(r.flex.dD)}g prima`);
-      else if(r.flex.dD > 0) parts.push(`parti ${r.flex.dD}g dopo`);
-      if(r.flex.dR < 0) parts.push(`torni ${Math.abs(r.flex.dR)}g prima`);
-      else if(r.flex.dR > 0) parts.push(`torni ${r.flex.dR}g dopo`);
-      if(parts.length) flexLabel = parts.join(', ');
-    }
-
-    block.innerHTML = `
-      <div class="dest-hd">
-        <div class="dest-flag">${r.dest.flag}</div>
-        <div>
-          <div class="dest-name">${r.dest.name}</div>
-          <div class="dest-region">${r.dest.region} · ${r.dest.iata}</div>
-        </div>
-        <div class="wx-badge ${r.dest.weather}">
-          ${wxIco} ${wxLabel}
-          <div class="tip">${r.dest.wxText}</div>
-        </div>
-      </div>
-
-      <div class="cards-grid">
-        ${renderDirectCard(r)}
-        ${r.hasFlex ? renderFlexCard(r, flexLabel) : ''}
-        ${r.hackData ? renderHackCard(r) : ''}
-      </div>
-      ${renderAirportPanel(r.dest.id)}
-    `;
-    container.appendChild(block);
+  const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer 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'
+    },
+    body: JSON.stringify({
+      model: 'llama-3.3-70b-versatile',
+      max_tokens: 4000,
+      temperature: 0.7,
+      messages: [{ role: 'user', content: prompt }]
+    })
   });
-}
 
-// ── CLAUDE URL BUILDER ──
-// Builds a claude.ai new-chat URL with a pre-filled prompt about this flight
-function buildClaudeUrl(r, cardType, flexLabel, hackData) {
-  let prompt = '';
-  const dest = r.dest;
-  const ap = AIRPORTS[r.airportCode] || { name: r.airportCode };
-
-  if (cardType === 'direct') {
-    prompt = `Ciao Claude! Sto valutando questo volo trovato con FlexiFly e vorrei il tuo aiuto:
-
-✈ VOLO: ${ap.name || r.airportCode} (${r.airportCode}) → ${dest.name} (${dest.iata})
-📅 DATE: ${fmtIta(r.depDate)} → ${fmtIta(r.retDate)} (${r.baseDur} notti)
-💰 PREZZO STIMATO VOLO: €${dest.priceRange.low}–€${dest.priceRange.high} per persona (bagaglio 23kg incluso)
-🏨 ALLOGGIO MEDIO: Budget €${dest.accom?.budget || '?'}/notte · Medium €${dest.accom?.medium || '?'}/notte · Resort €${dest.accom?.resort || '?'}/notte
-💳 SPESE GIORNALIERE: €${dest.living.medium}/giorno (medium)
-☀️ METEO AGOSTO: ${dest.wxText}
-✈ COMPAGNIE SUGGERITE: ${dest.airlines}
-🛫 HUB CONSIGLIATO: ${dest.hubName} · ${dest.hubReason}
-
-Puoi aiutarmi con:
-1. Confermare se questo è davvero il miglior periodo/hub per volare a ${dest.name} in agosto
-2. Cosa devo sapere su visti, documenti e salute (vaccini?) per ${dest.country}
-3. Consigli pratici su cosa vedere, dove dormire e come muoversi a ${dest.name}
-4. C'è qualcosa che mi stai perdendo su questo itinerario?`;
-
-  } else if (cardType === 'flex') {
-    prompt = `Ciao Claude! Sto valutando questo volo con date ottimizzate trovato con FlexiFly:
-
-✈ VOLO: ${ap.name || r.airportCode} (${r.airportCode}) → ${dest.name} (${dest.iata})
-📅 DATE OTTIMIZZATE: ${fmtIta(r.flexDep)} → ${fmtIta(r.flexRet)} (${r.flexDur} notti)
-${flexLabel ? `↳ Strategia: ${flexLabel} (giorno settimana più economico)` : ''}
-💰 PREZZO STIMATO: €${dest.priceRange.low}–€${dest.priceRange.high} per persona
-🏨 ALLOGGIO MEDIO: Budget €${dest.accom?.budget || '?'}/notte · Medium €${dest.accom?.medium || '?'}/notte
-💳 SPESE GIORNALIERE: €${dest.living.medium}/giorno (medium)
-☀️ METEO AGOSTO: ${dest.wxText}
-✈ COMPAGNIE: ${dest.airlines}
-
-Domande:
-1. Ha senso la flessibilità sulle date che suggerisce FlexiFly per questo volo? Partire di martedì/mercoledì conviene davvero?
-2. Con ${r.flexDur} notti a ${dest.name}, qual è il programma ideale?
-3. Consigli pratici su ${dest.name}: zona migliore dove dormire, trasporti interni, cosa non perdere`;
-
-  } else if (cardType === 'hack') {
-    prompt = `Ciao Claude! Sto valutando un "hack multi-hub" trovato da FlexiFly per risparmiare sul volo:
-
-🔥 HACK: ${r.airportCode} → ${hackData.hub} (low-cost) + ${hackData.hub} → ${dest.iata} (intercontinentale)
-📅 DATE: ${fmtIta(r.depDate)} → ${fmtIta(r.retDate)} (${r.baseDur} notti)
-💰 RISPARMIO STIMATO: €${hackData.saving.low}–€${hackData.saving.high} rispetto al volo diretto
-✈ PERCHÉ FUNZIONA: ${hackData.hubReason}
-🛡 ATTENZIONE: 2 biglietti separati — ritiro bagaglio a ${hackData.hub} e min. 4h di scalo
-🏨 ALLOGGIO: Budget €${dest.accom?.budget || '?'}/notte · Medium €${dest.accom?.medium || '?'}/notte
-☀️ METEO AGOSTO: ${dest.wxText}
-
-Puoi aiutarmi a valutare:
-1. Questo hack multi-hub via ${hackData.hubName} è sicuro e conveniente? Quali rischi ci sono con 2 biglietti separati?
-2. Quanto scalo minimo ti sembra ragionevole a ${hackData.hub} per gestire il bagaglio in sicurezza?
-3. Esistono alternative ancora più economiche che non ho considerato per arrivare a ${dest.name}?
-4. Consigli pratici su ${dest.name}: dove dormire, cosa fare, come muoversi`;
+  if (!response.ok) {
+    const err = await response.json();
+    throw new Error(err.error?.message || `HTTP ${response.status}`);
   }
 
-  return `https://claude.ai/new?q=${encodeURIComponent(prompt)}`;
+  const data = await response.json();
+  const text = data.choices[0].message.content;
+  const clean = text.replace(/```json|```/g,'').trim();
+  return JSON.parse(clean);
 }
 
-function claudeBtn(url) {
-  return `
-    <div class="claude-sep"></div>
-    <a class="cta-btn claude-btn" href="${url}" target="_blank" rel="noopener">
-      <span class="claude-pulse"></span>
-      <span>Chiedi a <strong>Claude</strong> su questo volo</span>
-      <span class="cta-label">↗ Apre chat</span>
-    </a>
-  `;
-}
+// ── RENDER HELPERS ──
 function renderAccom(dest) {
   const a = dest.accom;
   if (!a) return '';
-  const cells = [
-    { label:'🏕 Budget', price: a.hostel ? `€${a.hostel}` : '—', isBest: false },
-    { label:'🏨 Medium', price: `€${a.medium}`, isBest: true },
-    { label:'🌴 Resort', price: `€${a.resort}`, isBest: false },
-  ];
-  return `
-    <div class="accom-row">
-      <div class="accom-title">🛏 Alloggio medio a notte</div>
-      <div class="accom-grid">
-        ${cells.map(c => `
-          <div class="accom-cell${c.isBest ? ' best-accom' : ''}">
-            <div class="ac-label">${c.label}</div>
-            <div class="ac-price">${c.price}</div>
-          </div>
-        `).join('')}
-      </div>
-      ${dest.accomNote ? `<div class="accom-note-txt">${dest.accomNote}</div>` : ''}
+  return `<div class="accom-row">
+    <div class="accom-title">🛏 Alloggio medio a notte</div>
+    <div class="accom-grid">
+      <div class="accom-cell"><div class="ac-label">🏕 Budget</div><div class="ac-price">${a.hostel ? '€'+a.hostel : '—'}</div></div>
+      <div class="accom-cell best-accom"><div class="ac-label">🏨 Medium</div><div class="ac-price">€${a.medium}</div></div>
+      <div class="accom-cell"><div class="ac-label">🌴 Resort</div><div class="ac-price">€${a.resort}</div></div>
     </div>
-  `;
+    ${dest.accomNote ? `<div class="accom-note-txt">${dest.accomNote}</div>` : ''}
+  </div>`;
 }
 
+function claudeBtn(url) {
+  return `<div class="claude-sep"></div>
+  <a class="cta-btn claude-btn" href="${url}" target="_blank" rel="noopener">
+    <span class="claude-pulse"></span>
+    <span>Chiedi a <strong>Claude</strong> su questo volo</span>
+    <span class="cta-label">↗ Apre chat</span>
+  </a>`;
+}
+
+function buildClaudeUrl(r, cardType, flexLabel, hackData) {
+  const dest = r.dest;
+  const apName = (AIRPORTS[r.airportCode]||{name:r.airportCode}).name;
+  let prompt = '';
+  if (cardType==='direct') {
+    prompt = `Ciao Claude! Sto valutando questo volo trovato con FlexiFly:\n\n✈ ${apName} (${r.airportCode}) → ${dest.name} (${dest.iata})\n📅 DATE: ${fmtIta(r.depDate)} → ${fmtIta(r.retDate)} (${r.baseDur} notti)\n💰 PREZZO STIMATO: €${dest.priceRange.low}–€${dest.priceRange.high}\n☀️ METEO: ${dest.wxText}\n✈ COMPAGNIE: ${dest.airlines}\n🛫 HUB: ${dest.hubName}\n\nAiutami con:\n1. È davvero il momento giusto per andare a ${dest.name}?\n2. Visti e documenti necessari per italiani\n3. Consigli pratici su dove dormire e cosa vedere`;
+  } else if (cardType==='flex') {
+    prompt = `Ciao Claude! Volo con date ottimizzate FlexiFly:\n\n✈ ${apName} → ${dest.name} (${dest.iata})\n📅 DATE OTTIMIZZATE: ${fmtIta(r.flexDep)} → ${fmtIta(r.flexRet)} (${r.flexDur} notti)\n${flexLabel ? `↳ ${flexLabel}` : ''}\n☀️ METEO: ${dest.wxText}\n\nHa senso la flessibilità? Itinerario ottimale per ${r.flexDur} notti?`;
+  } else {
+    prompt = `Ciao Claude! Hack multi-hub FlexiFly:\n\n🔥 ${r.airportCode} → ${hackData.hub} (low-cost) + ${hackData.hub} → ${dest.iata} (intercontinentale)\n📅 ${fmtIta(r.depDate)} → ${fmtIta(r.retDate)} (${r.baseDur} notti)\n💰 RISPARMIO STIMATO: €${hackData.saving.low}–€${hackData.saving.high}\n⚠ 2 biglietti separati, ritiro bagaglio a ${hackData.hub}\n\nQuesto hack è sicuro e conveniente? Rischi? Alternative?`;
+  }
+  return `https://claude.ai/new?q=${encodeURIComponent(prompt)}`;
+}
+
+// ── CARD RENDERERS ──
 function renderDirectCard(r) {
   const lo = r.dest.living;
-  const totalBudget = r.dest.priceRange.low + lo.budget * r.baseDur;
   const totalMedium = r.dest.priceRange.low + lo.medium * r.baseDur;
-
-  return `
-    <div class="fc">
-      <div class="fc-tag tag-fixed">📅 Date fisse</div>
-      <div class="fc-subtitle">
-        ${r.airportCode} → ${r.dest.iata} · ${r.dest.airlines.split('/')[0].trim()}
-      </div>
-      <div class="fc-dates">
-        <strong>${fmtIta(r.depDate)}</strong> → <strong>${fmtIta(r.retDate)}</strong>
-        · ${r.baseDur} notti
-      </div>
-      <div class="fc-price"><sup>€</sup>${r.dest.priceRange.low}–${r.dest.priceRange.high}</div>
-      <div class="fc-price-note">stima per persona, incl. bagaglio 23 kg — verifica il prezzo reale →</div>
-
-      <div class="fc-div"></div>
-      ${renderAccom(r.dest)}
-      <div class="budget-rows">
-        <div class="budget-row"><span class="lbl">💶 Spese giornaliere (budget)</span><span class="val">€${lo.budget}/g</span></div>
-        <div class="budget-row"><span class="lbl">💳 Spese giornaliere (medium)</span><span class="val">€${lo.medium}/g</span></div>
-        <div class="budget-row total"><span class="lbl">💰 Totale stimato viaggio (medium)</span><span class="val">€${totalMedium.toLocaleString('it-IT')}</span></div>
-      </div>
-      <div class="fc-badges">
-        <span class="badge b-luggage">🧳 Bagaglio 23kg incluso</span>
-        <span class="badge b-visa-ok">✓ Nessun ESTA/visto transit</span>
-      </div>
-      <div class="cta-row">
-        <a class="cta-btn primary" href="${r.urls.urlSky}" target="_blank" rel="noopener">
-          <span class="cta-logo">🔵</span>
-          <span>Cerca su <strong>Skyscanner</strong></span>
-          <span class="cta-label">↗ Apre ricerca</span>
-        </a>
-        <a class="cta-btn" href="${r.urls.urlGoog}" target="_blank" rel="noopener">
-          <span class="cta-logo">🔴</span>
-          <span>Cerca su <strong>Google Flights</strong></span>
-        </a>
-        <a class="cta-btn" href="${r.urls.urlKiwi}" target="_blank" rel="noopener">
-          <span class="cta-logo">🟣</span>
-          <span>Cerca su <strong>Kiwi.com</strong></span>
-        </a>
-        ${claudeBtn(buildClaudeUrl(r, 'direct', null, null))}
-      </div>
+  return `<div class="fc">
+    <div class="fc-tag tag-fixed">📅 Date fisse</div>
+    <div class="fc-subtitle">${r.airportCode} → ${r.dest.iata} · ${r.dest.airlines.split('/')[0].trim()}</div>
+    <div class="fc-dates"><strong>${fmtIta(r.depDate)}</strong> → <strong>${fmtIta(r.retDate)}</strong> · ${r.baseDur} notti</div>
+    <div class="fc-price"><sup>€</sup>${r.dest.priceRange.low}–${r.dest.priceRange.high}</div>
+    <div class="fc-price-note">stima storica per persona, incl. bagaglio 23 kg</div>
+    <div class="fc-div"></div>
+    ${renderAccom(r.dest)}
+    <div class="budget-rows">
+      <div class="budget-row"><span class="lbl">💳 Spese giornaliere (medium)</span><span class="val">€${lo.medium}/g</span></div>
+      <div class="budget-row total"><span class="lbl">💰 Totale stimato (medium)</span><span class="val">€${totalMedium.toLocaleString('it-IT')}</span></div>
     </div>
-  `;
+    <div class="fc-badges">
+      <span class="badge b-luggage">🧳 Bagaglio 23kg</span>
+      <span class="badge b-visa-ok">✓ No ESTA/visto transit</span>
+    </div>
+    <div class="cta-row">
+      <a class="cta-btn primary" href="${r.urls.urlSky}" target="_blank" rel="noopener"><span class="cta-logo">🔵</span><span>Cerca su <strong>Skyscanner</strong></span><span class="cta-label">↗ Apre ricerca</span></a>
+      <a class="cta-btn" href="${r.urls.urlGoog}" target="_blank" rel="noopener"><span class="cta-logo">🔴</span><span>Cerca su <strong>Google Flights</strong></span></a>
+      <a class="cta-btn" href="${r.urls.urlKiwi}" target="_blank" rel="noopener"><span class="cta-logo">🟣</span><span>Cerca su <strong>Kiwi.com</strong></span></a>
+      ${claudeBtn(buildClaudeUrl(r,'direct',null,null))}
+    </div>
+  </div>`;
 }
 
 function renderFlexCard(r, flexLabel) {
   const lo = r.dest.living;
   const totalMedium = r.dest.priceRange.low + lo.medium * r.flexDur;
-
-  return `
-    <div class="fc is-flex">
-      <div class="fc-tag tag-flex">⚡ Date ottimizzate</div>
-      <div class="fc-subtitle">Strategia flessibilità · giorno migliore della settimana</div>
-      <div class="fc-dates">
-        <strong>${fmtIta(r.flexDep)}</strong> → <strong>${fmtIta(r.flexRet)}</strong>
-        · ${r.flexDur} notti
-        ${flexLabel ? `<br><span style="color:var(--accent);font-size:0.78rem">↳ ${flexLabel}</span>` : ''}
-      </div>
-      <div class="fc-saving">💡 Martedì/mercoledì: tariffe tipicamente -10–20% su date esatte</div>
-      <div class="fc-price"><sup>€</sup>${r.dest.priceRange.low}–${r.dest.priceRange.high}</div>
-      <div class="fc-price-note">Verifica il delta reale cliccando — il motore mostrerà il prezzo preciso</div>
-      <div class="fc-div"></div>
-      ${renderAccom(r.dest)}
-      <div class="budget-rows">
-        <div class="budget-row"><span class="lbl">💳 Spese giornaliere (medium)</span><span class="val">€${lo.medium}/g</span></div>
-        <div class="budget-row total"><span class="lbl">💰 Totale stimato viaggio (medium)</span><span class="val">€${totalMedium.toLocaleString('it-IT')}</span></div>
-      </div>
-      <div class="fc-badges">
-        <span class="badge b-luggage">🧳 Bagaglio 23kg</span>
-        <span class="badge b-protect">✦ Date ottimizzate</span>
-      </div>
-      <div class="cta-row">
-        <a class="cta-btn primary" href="${r.flexUrls.urlSkyFlex}" target="_blank" rel="noopener">
-          <span class="cta-logo">🔵</span>
-          <span>Cerca su <strong>Skyscanner</strong> (date flex)</span>
-          <span class="cta-label">↗ Apre ricerca</span>
-        </a>
-        <a class="cta-btn" href="${r.flexUrls.urlGoogFlex}" target="_blank" rel="noopener">
-          <span class="cta-logo">🔴</span>
-          <span>Cerca su <strong>Google Flights</strong></span>
-        </a>
-        <a class="cta-btn" href="${r.flexUrls.urlKiwiFlex}" target="_blank" rel="noopener">
-          <span class="cta-logo">🟣</span>
-          <span>Cerca su <strong>Kiwi.com</strong></span>
-        </a>
-        ${claudeBtn(buildClaudeUrl(r, 'flex', flexLabel, null))}
-      </div>
+  return `<div class="fc is-flex">
+    <div class="fc-tag tag-flex">⚡ Date ottimizzate</div>
+    <div class="fc-subtitle">Strategia flessibilità · giorno migliore della settimana</div>
+    <div class="fc-dates"><strong>${fmtIta(r.flexDep)}</strong> → <strong>${fmtIta(r.flexRet)}</strong> · ${r.flexDur} notti${flexLabel ? `<br><span style="color:var(--accent);font-size:.78rem">↳ ${flexLabel}</span>` : ''}</div>
+    <div class="fc-saving">💡 Martedì/mercoledì: tariffe tipicamente -10–20%</div>
+    <div class="fc-price"><sup>€</sup>${r.dest.priceRange.low}–${r.dest.priceRange.high}</div>
+    <div class="fc-price-note">Verifica il delta reale cliccando sul motore</div>
+    <div class="fc-div"></div>
+    ${renderAccom(r.dest)}
+    <div class="budget-rows">
+      <div class="budget-row total"><span class="lbl">💰 Totale stimato (medium)</span><span class="val">€${totalMedium.toLocaleString('it-IT')}</span></div>
     </div>
-  `;
+    <div class="cta-row">
+      <a class="cta-btn primary" href="${r.flexUrls.urlSkyFlex}" target="_blank" rel="noopener"><span class="cta-logo">🔵</span><span>Cerca su <strong>Skyscanner</strong> (date flex)</span><span class="cta-label">↗</span></a>
+      <a class="cta-btn" href="${r.flexUrls.urlGoogFlex}" target="_blank" rel="noopener"><span class="cta-logo">🔴</span><span>Cerca su <strong>Google Flights</strong></span></a>
+      <a class="cta-btn" href="${r.flexUrls.urlKiwiFlex}" target="_blank" rel="noopener"><span class="cta-logo">🟣</span><span>Cerca su <strong>Kiwi.com</strong></span></a>
+      ${claudeBtn(buildClaudeUrl(r,'flex',flexLabel,null))}
+    </div>
+  </div>`;
 }
 
 function renderHackCard(r) {
   const h = r.hackData;
   const lo = r.dest.living;
   const totalMedium = r.dest.priceRange.low - h.saving.low + lo.medium * r.baseDur;
-
-  return `
-    <div class="fc is-hack">
-      <div class="fc-tag tag-hack">🔥 Hack Multi-Hub via ${h.hubName}</div>
-      <div class="fc-subtitle">2 biglietti separati · Risparmio stimato €${h.saving.low}–€${h.saving.high}</div>
-      <div class="fc-dates">
-        <strong>${fmtIta(r.depDate)}</strong> → <strong>${fmtIta(r.retDate)}</strong>
-        · ${r.baseDur} notti
-      </div>
-
-      <div class="hub-reason">
-        💡 <strong>Perché funziona:</strong> ${h.hubReason}
-      </div>
-
-      <div class="hack-box">
-        <div class="hack-row">
-          <span>✈ ${r.airportCode} → ${h.hub} (low-cost, bagaglio incl.)</span>
-          <span style="color:var(--text3)">Cerca →</span>
-        </div>
-        <div class="hack-row">
-          <span>✈ ${h.hub} → ${r.dest.iata} andata+ritorno</span>
-          <span style="color:var(--text3)">Cerca →</span>
-        </div>
-        <div class="hack-row ht">
-          <span>Risparmio stimato vs diretto</span>
-          <span style="color:var(--orange)">€${h.saving.low}–€${h.saving.high}</span>
-        </div>
-      </div>
-
-      <div class="fc-div"></div>
-      ${renderAccom(r.dest)}
-      <div class="budget-rows">
-        <div class="budget-row"><span class="lbl">💳 Spese giornaliere (medium)</span><span class="val">€${lo.medium}/g</span></div>
-        <div class="budget-row total"><span class="lbl">💰 Totale stimato hack (medium)</span><span class="val">~€${totalMedium.toLocaleString('it-IT')}</span></div>
-      </div>
-
-      <div class="fc-badges">
-        <span class="badge b-protect">🛡 Conn. Protetta FlexiFly</span>
-        <span class="badge b-warn">⚠ Ritira bagaglio a ${h.hub}</span>
-        <span class="badge b-warn">⏱ Min 4h di scalo</span>
-      </div>
-
-      <div class="cta-row">
-        <a class="cta-btn primary" href="${h.urlKiwiHack}" target="_blank" rel="noopener">
-          <span class="cta-logo">🟣</span>
-          <span><strong>Kiwi.com</strong> — cerca self-connect</span>
-          <span class="cta-label">↗ Migliore per questo hack</span>
-        </a>
-        <div style="font-size:0.72rem;color:var(--text3);padding:4px 0 2px">oppure cerca le 2 tratte separatamente:</div>
-        <a class="cta-btn" href="${h.urlLeg1Out}" target="_blank" rel="noopener">
-          <span class="cta-logo">🔵</span>
-          <span>Skyscanner · <strong>${r.airportCode}→${h.hub}</strong> (a/r low-cost)</span>
-        </a>
-        <a class="cta-btn" href="${h.urlLeg2Goog}" target="_blank" rel="noopener">
-          <span class="cta-logo">🔴</span>
-          <span>Google Flights · <strong>${h.hub}→${r.dest.iata}</strong> (intercontinentale)</span>
-        </a>
-        ${claudeBtn(buildClaudeUrl(r, 'hack', null, h))}
-      </div>
+  return `<div class="fc is-hack">
+    <div class="fc-tag tag-hack">🔥 Hack Multi-Hub via ${h.hubName}</div>
+    <div class="fc-subtitle">2 biglietti separati · Risparmio stimato €${h.saving.low}–€${h.saving.high}</div>
+    <div class="fc-dates"><strong>${fmtIta(r.depDate)}</strong> → <strong>${fmtIta(r.retDate)}</strong> · ${r.baseDur} notti</div>
+    <div class="hub-reason">💡 <strong>Perché funziona:</strong> ${h.hubReason}</div>
+    <div class="hack-box">
+      <a class="hack-row hack-link" href="${h.urlLeg1Out}" target="_blank" rel="noopener">
+        <span>✈ <strong>${r.airportCode} → ${h.hub}</strong> (low-cost, bagaglio incl.)</span>
+        <span class="hack-search-lbl">Sky →</span>
+      </a>
+      <a class="hack-row hack-link" href="${h.urlLeg2Sky}" target="_blank" rel="noopener">
+        <span>✈ <strong>${h.hub} → ${r.dest.iata}</strong> a/r intercontinentale</span>
+        <span class="hack-search-lbl">Sky →</span>
+      </a>
+      <a class="hack-row hack-link" href="${h.urlLeg2Goog}" target="_blank" rel="noopener">
+        <span>✈ <strong>${h.hub} → ${r.dest.iata}</strong> a/r intercontinentale</span>
+        <span class="hack-search-lbl">Google →</span>
+      </a>
+      <div class="hack-row ht"><span>Risparmio stimato vs diretto</span><span style="color:var(--orange)">€${h.saving.low}–€${h.saving.high}</span></div>
     </div>
-  `;
+    <div class="fc-div"></div>
+    ${renderAccom(r.dest)}
+    <div class="budget-rows">
+      <div class="budget-row total"><span class="lbl">💰 Totale stimato hack (medium)</span><span class="val">~€${totalMedium.toLocaleString('it-IT')}</span></div>
+    </div>
+    <div class="fc-badges">
+      <span class="badge b-protect">🛡 Conn. Protetta FlexiFly</span>
+      <span class="badge b-warn">⚠ Ritira bagaglio a ${h.hub}</span>
+      <span class="badge b-warn">⏱ Min 4h di scalo</span>
+    </div>
+    <div class="cta-row">
+      <a class="cta-btn primary" href="${h.urlKiwiHack}" target="_blank" rel="noopener"><span class="cta-logo">🟣</span><span><strong>Kiwi.com</strong> — self-connect ${r.airportCode}→${r.dest.iata} via ${h.hub}</span><span class="cta-label">↗ Migliore</span></a>
+      <div style="font-size:.72rem;color:var(--text3);padding:6px 0 2px;font-weight:600">TRATTA 1 — ${r.airportCode} → ${h.hub} (low-cost)</div>
+      <a class="cta-btn" href="${h.urlLeg1Out}" target="_blank" rel="noopener"><span class="cta-logo">🔵</span><span>Skyscanner · <strong>${r.airportCode} → ${h.hub}</strong> solo andata</span></a>
+      <a class="cta-btn" href="${h.urlLeg1Ret}" target="_blank" rel="noopener"><span class="cta-logo">🔵</span><span>Skyscanner · <strong>${h.hub} → ${r.airportCode}</strong> ritorno</span></a>
+      <div style="font-size:.72rem;color:var(--text3);padding:6px 0 2px;font-weight:600">TRATTA 2 — ${h.hub} → ${r.dest.iata} (intercontinentale a/r)</div>
+      <a class="cta-btn" href="${h.urlLeg2Sky}" target="_blank" rel="noopener"><span class="cta-logo">🔵</span><span>Skyscanner · <strong>${h.hub} → ${r.dest.iata}</strong> a/r</span></a>
+      <a class="cta-btn" href="${h.urlLeg2Goog}" target="_blank" rel="noopener"><span class="cta-logo">🔴</span><span>Google Flights · <strong>${h.hub} → ${r.dest.iata}</strong> a/r</span></a>
+      <a class="cta-btn" href="${h.urlLeg2Kiwi}" target="_blank" rel="noopener"><span class="cta-logo">🟣</span><span>Kiwi.com · <strong>${h.hub} → ${r.dest.iata}</strong> a/r</span></a>
+      ${claudeBtn(buildClaudeUrl(r,'hack',null,h))}
+    </div>
+  </div>`;
+}
+
+// ── AIRPORT PANEL ──
+function renderAirportPanel(dest) {
+  if (!dest.airports || !dest.airports.length) return '';
+  const panelId = `ap-${dest.id}`;
+  const items = dest.airports.map(ap => `
+    <div class="ap-item${ap.best?' best':''}">
+      <div style="font-family:'Bricolage Grotesque',sans-serif;font-size:1.1rem;font-weight:800;background:${ap.best?'var(--accent-dim)':'var(--s3)'};color:${ap.best?'var(--accent)':'var(--text)'};border-radius:6px;padding:4px 10px;min-width:52px;text-align:center">${ap.iata}</div>
+      <div>
+        <div style="font-size:.88rem;font-weight:600;color:var(--text);margin-bottom:3px;display:flex;align-items:center;gap:7px">
+          ${ap.name}
+          ${ap.best?'<span style="font-size:.62rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:2px 7px;border-radius:4px;background:var(--accent-dim);color:var(--accent)">✓ Consigliato</span>':''}
+        </div>
+        <div style="font-size:.78rem;color:var(--text2);line-height:1.55">${ap.desc}</div>
+        ${ap.note?`<div style="font-size:.73rem;color:var(--text3);margin-top:4px;font-style:italic">ℹ ${ap.note}</div>`:''}
+      </div>
+    </div>`).join('');
+  return `<div style="margin-top:16px;border:1px solid var(--border);border-radius:10px;overflow:hidden">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 16px;background:var(--s2);cursor:pointer;font-size:.82rem;color:var(--text2);font-weight:500;user-select:none" onclick="toggleAp('${panelId}')">
+      <span>🛬 Aeroporti e dove atterrare (${dest.airports.length} opzioni)</span>
+      <span id="chev-${panelId}" style="font-size:.7rem;color:var(--text3);transition:transform .22s">▼</span>
+    </div>
+    <div id="${panelId}" style="display:none;padding:16px;background:var(--s1);border-top:1px solid var(--border)">
+      <div style="display:flex;flex-direction:column;gap:10px">${items}</div>
+    </div>
+  </div>`;
+}
+function toggleAp(id) {
+  const body = document.getElementById(id);
+  const chev = document.getElementById('chev-'+id);
+  const open = body.style.display==='block';
+  body.style.display = open?'none':'block';
+  chev.style.transform = open?'':'rotate(180deg)';
+}
+
+// ── COMPUTE URLS FOR A DEST ──
+function computeDestUrls(dest, airportCode, depDate, retDate, flexDays, showHack) {
+  const baseDur = diffDays(depDate, retDate);
+  const flex = flexDays>0 ? bestFlexOffset(depDate,retDate,flexDays) : null;
+  const flexDep = flex?flex.nd:depDate, flexRet = flex?flex.nr:retDate;
+  const flexDur = flex?flex.dur:baseDur;
+  const hasFlex = flex&&(flex.dD!==0||flex.dR!==0);
+
+  const urlSky = buildSkyscanner(airportCode,dest.iata,depDate,retDate);
+  const urlGoog = buildGoogleFlights(airportCode,dest.iata,depDate,retDate);
+  const urlKiwi = buildKiwi(airportCode,dest.iata,depDate,retDate);
+  const urlSkyFlex = hasFlex?buildSkyscanner(airportCode,dest.iata,flexDep,flexRet):null;
+  const urlGoogFlex = hasFlex?buildGoogleFlights(airportCode,dest.iata,flexDep,flexRet):null;
+  const urlKiwiFlex = hasFlex?buildKiwi(airportCode,dest.iata,flexDep,flexRet):null;
+
+  let hackData = null;
+  if (showHack && dest.hub) {
+    hackData = {
+      hub:dest.hub, hubName:dest.hubName, hubReason:dest.hubReason, airlines:dest.airlines,
+      saving:dest.hackSaving,
+      urlKiwiHack: buildKiwiHack(airportCode,dest.hub,dest.iata,depDate,retDate),
+      urlLeg1Out: buildSkyscannerOW(airportCode,dest.hub,depDate),
+      urlLeg1Ret: buildSkyscannerOW(dest.hub,airportCode,retDate),
+      urlLeg2Sky: buildSkyscanner(dest.hub,dest.iata,depDate,retDate),
+      urlLeg2Goog: buildGoogleFlights(dest.hub,dest.iata,depDate,retDate),
+      urlLeg2Kiwi: buildKiwi(dest.hub,dest.iata,depDate,retDate),
+    };
+  }
+
+  let flexLabel = '';
+  if (hasFlex) {
+    const parts=[];
+    if(flex.dD<0) parts.push(`parti ${Math.abs(flex.dD)}g prima`);
+    else if(flex.dD>0) parts.push(`parti ${flex.dD}g dopo`);
+    if(flex.dR<0) parts.push(`torni ${Math.abs(flex.dR)}g prima`);
+    else if(flex.dR>0) parts.push(`torni ${flex.dR}g dopo`);
+    if(parts.length) flexLabel = parts.join(', ');
+  }
+
+  return { dest, airportCode, baseDur, flexDur, depDate, retDate, flexDep, flexRet, hasFlex, flex, flexLabel,
+    urls:{urlSky,urlGoog,urlKiwi},
+    flexUrls:hasFlex?{urlSkyFlex,urlGoogFlex,urlKiwiFlex}:null,
+    hackData };
+}
+
+// ── RENDER ALL ──
+let lastResults = [];
+function renderAll(results, hideRed) {
+  const container = document.getElementById('resultsContainer');
+  const meteoNotice = document.getElementById('meteoNotice');
+  container.innerHTML = '';
+
+  const visible = hideRed ? results.filter(r=>r.dest.weather!=='red') : results;
+  const hiddenCount = results.filter(r=>r.dest.weather==='red').length;
+
+  if(hideRed&&hiddenCount>0){
+    meteoNotice.classList.add('on');
+    document.getElementById('meteoCount').textContent = hiddenCount;
+  } else { meteoNotice.classList.remove('on'); }
+
+  if(!visible.length){ document.getElementById('empty').classList.add('on'); return; }
+  document.getElementById('empty').classList.remove('on');
+
+  // AI context banner
+  const depMonth = new Date(visible[0].depDate+'T00:00:00').toLocaleString('it-IT',{month:'long',year:'numeric'});
+  const banner = document.createElement('div');
+  banner.className = 'ai-banner';
+  banner.innerHTML = `✨ <strong>L'AI ha selezionato queste destinazioni</strong> come le migliori per <strong>${depMonth}</strong> — in base a meteo, eventi, stagionalità e convenienza dei voli dall'Italia. I badge 🟢🟡🔴 riflettono le condizioni reali di quel mese.`;
+  container.appendChild(banner);
+
+  // header
+  const rh = document.createElement('div');
+  rh.className = 'rh';
+  rh.innerHTML = `<div>
+    <div class="rh-title">${visible.length} destinazioni trovate dall'AI</div>
+    <div class="rh-sub">Clicca "Cerca ora" per aprire la ricerca reale già precompilata</div>
+  </div>
+  <div class="sort-bar">
+    <button class="sort-btn active" onclick="doSort('ai',this)">Ordine AI</button>
+    <button class="sort-btn" onclick="doSort('saving',this)">Risparmio hack</button>
+    <button class="sort-btn" onclick="doSort('living',this)">Costo vita</button>
+  </div>`;
+  container.appendChild(rh);
+
+  visible.forEach((r,i) => {
+    const block = document.createElement('div');
+    block.className = 'dest-block';
+    block.style.animationDelay = `${i*.07}s`;
+    const wxIco = {green:'☀️',yellow:'⛅',red:'🌧️'}[r.dest.weather];
+    const wxLabel = {green:'Clima ottimo',yellow:'Attenzione piogge',red:'Sconsigliato'}[r.dest.weather];
+    const mapsUrl = buildAppleMaps(r.dest.name, r.dest.country);
+
+    block.innerHTML = `<div class="dest-hd">
+      <div class="dest-flag">${r.dest.flag}</div>
+      <div>
+        <div class="dest-name">${r.dest.name}</div>
+        <div class="dest-region">${r.dest.region} · ${r.dest.iata}</div>
+        <a class="dest-maps" href="${mapsUrl}" target="_blank" rel="noopener">🗺 Apri in Apple Maps</a>
+      </div>
+      <div class="wx-badge ${r.dest.weather}">${wxIco} ${wxLabel}<div class="tip">${r.dest.wxText}</div></div>
+    </div>
+    ${r.dest.whyNow ? `<div style="font-size:.8rem;color:var(--accent);background:var(--accent-dim);border-radius:8px;padding:9px 12px;margin-bottom:14px;border-left:2px solid var(--accent);line-height:1.5">✦ <strong>Perché proprio ora:</strong> ${r.dest.whyNow}</div>` : ''}
+    <div class="cards-grid">
+      ${renderDirectCard(r)}
+      ${r.hasFlex ? renderFlexCard(r, r.flexLabel) : ''}
+      ${r.hackData ? renderHackCard(r) : ''}
+    </div>
+    ${renderAirportPanel(r.dest)}`;
+    container.appendChild(block);
+  });
 }
 
 // ── SORT ──
 function doSort(key, btn) {
   document.querySelectorAll('.sort-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-
-  let sorted = [...lastAll];
-  if(key==='saving') {
-    sorted.sort((a,b) => (b.dest.hackSaving.low - a.dest.hackSaving.low));
-  } else if(key==='living') {
-    sorted.sort((a,b) => a.dest.living.medium - b.dest.living.medium);
-  } else {
-    sorted.sort((a,b) => a.dest.name.localeCompare(b.dest.name));
-  }
-
-  const hideRed = document.getElementById('hideRed').checked;
-  renderAll(sorted, hideRed);
+  let sorted = [...lastResults];
+  if(key==='saving') sorted.sort((a,b)=>(b.dest.hackSaving.low-a.dest.hackSaving.low));
+  else if(key==='living') sorted.sort((a,b)=>a.dest.living.medium-b.dest.living.medium);
+  // 'ai' = original order
+  renderAll(sorted, document.getElementById('hideRed').checked);
 }
+function showHiddenRed() { document.getElementById('hideRed').checked=false; renderAll(lastResults,false); }
 
-function showHiddenRed() {
-  document.getElementById('hideRed').checked = false;
-  renderAll(lastAll, false);
-}
-
-// ── THEME TOGGLE ──
-let isDark = true;
-function toggleTheme() {
-  isDark = !isDark;
-  document.documentElement.setAttribute('data-theme', isDark ? '' : 'light');
-  const btn = document.getElementById('themeBtn');
-  btn.textContent = isDark ? '☀️ Tema chiaro' : '🌙 Tema scuro';
-}
-
-// ── SEARCH ──
+// ── MAIN SEARCH ──
 const STEPS = [
-  'Controllo codici IATA e rotte disponibili…',
-  'Identifico hub europei ottimali per destinazione…',
-  'Verifico requisiti visti e transit visa…',
-  'Calcolo giorno ottimale con flessibilità ±giorni…',
-  'Costruisco URL di ricerca diretti…',
-  'Incrocio dati meteo agosto per destinazione…',
-  'Stima costi vita e totale viaggio…',
-  'Pronto! Ecco le tue opzioni ✓',
+  'Analisi del periodo e della stagionalità…',
+  'L\'AI identifica le destinazioni ottimali…',
+  'Calcolo hub europei e hack multi-biglietto…',
+  'Verifica condizioni meteo per ogni meta…',
+  'Costruzione link di ricerca precompilati…',
+  'Quasi pronto…',
 ];
 
 async function doSearch() {
-  const airport = document.getElementById('airport').value;
+  const airportCode = document.getElementById('airport').value;
   const depDate = document.getElementById('depDate').value;
   const retDate = document.getElementById('retDate').value;
   const flexDays = parseInt(document.getElementById('flex').value);
@@ -1898,33 +801,59 @@ async function doSearch() {
   const showHack = document.getElementById('showHack').checked;
   const hideRed = document.getElementById('hideRed').checked;
 
-  if(!depDate || !retDate) { alert('Seleziona le date di partenza e ritorno.'); return; }
-  if(new Date(retDate) <= new Date(depDate)) { alert('La data di ritorno deve essere dopo la partenza.'); return; }
-  if(diffDays(depDate, retDate) < 4) { alert('Seleziona almeno 4 notti di soggiorno.'); return; }
+  if(!depDate||!retDate){ alert('Seleziona le date di partenza e ritorno.'); return; }
+  if(new Date(retDate)<=new Date(depDate)){ alert('La data di ritorno deve essere dopo la partenza.'); return; }
+  if(diffDays(depDate,retDate)<4){ alert('Seleziona almeno 4 notti di soggiorno.'); return; }
 
-  document.getElementById('resultsContainer').innerHTML = '';
+  document.getElementById('resultsContainer').innerHTML='';
   document.getElementById('empty').classList.remove('on');
   document.getElementById('meteoNotice').classList.remove('on');
-  document.getElementById('loading').classList.on;
-  document.getElementById('loading').className = 'loading-state on';
-  document.getElementById('searchBtn').disabled = true;
+  document.getElementById('loading').className='loading-state on';
+  document.getElementById('searchBtn').disabled=true;
 
-  for(let i=0; i<STEPS.length; i++) {
-    document.getElementById('lstep').textContent = STEPS[i];
-    await new Promise(r=>setTimeout(r, 280));
+  // Animate steps
+  const stepInterval = setInterval(()=>{
+    const step = STEPS[Math.floor(Math.random()*STEPS.length)];
+    document.getElementById('lstep').textContent=step;
+  },600);
+
+  try {
+    const dests = await fetchDestinationsFromAI(depDate, retDate, avoidVisa, airportCode);
+    clearInterval(stepInterval);
+    document.getElementById('lstep').textContent='Pronto! ✓';
+
+    lastResults = dests.map(dest => computeDestUrls(dest, airportCode, depDate, retDate, flexDays, showHack));
+
+    document.getElementById('loading').className='loading-state';
+    document.getElementById('searchBtn').disabled=false;
+    renderAll(lastResults, hideRed);
+    document.querySelector('.results-wrap').scrollIntoView({behavior:'smooth',block:'start'});
+  } catch(err) {
+    clearInterval(stepInterval);
+    document.getElementById('loading').className='loading-state';
+    document.getElementById('searchBtn').disabled=false;
+    document.getElementById('resultsContainer').innerHTML=`<div class="error-box">⚠ Errore nella chiamata AI: ${err.message}<br><small>Controlla la connessione e riprova.</small></div>`;
   }
-
-  lastAll = computeAll(airport, depDate, retDate, flexDays, avoidVisa, showHack);
-  document.getElementById('loading').className = 'loading-state';
-  document.getElementById('searchBtn').disabled = false;
-  renderAll(lastAll, hideRed);
-
-  // Scroll to results
-  document.querySelector('.results-wrap').scrollIntoView({ behavior:'smooth', block:'start' });
 }
 
-// Auto-run on load
-window.addEventListener('load', () => setTimeout(doSearch, 500));
+// ── INIT ──
+window.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('airportSearch').value='Milano Malpensa (MXP)';
+  const today=new Date();
+  const dep=new Date(today); dep.setDate(today.getDate()+30);
+  const ret=new Date(today); ret.setDate(today.getDate()+44);
+  const fmt=d=>d.toISOString().slice(0,10);
+  const depEl=document.getElementById('depDate');
+  const retEl=document.getElementById('retDate');
+  depEl.value=fmt(dep); retEl.value=fmt(ret);
+  depEl.min=fmt(today); retEl.min=fmt(dep);
+  depEl.addEventListener('change',()=>{
+    retEl.min=depEl.value;
+    if(retEl.value&&retEl.value<=depEl.value){
+      const nd=new Date(depEl.value); nd.setDate(nd.getDate()+7); retEl.value=fmt(nd);
+    }
+  });
+});
 </script>
 </body>
 </html>
